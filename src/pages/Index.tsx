@@ -1,11 +1,33 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import LockedScreen from "../components/LockedScreen";
+import GoogleLoginCard from "../components/GoogleLoginCard";
+import AuditForm from "../components/AuditForm";
+
+type AppStep = "locked" | "login" | "form";
 
 const Index = () => {
+  const [step, setStep] = useState<AppStep>("locked");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-background font-roboto">
+      <div className="flex items-center justify-center min-h-screen py-8 px-4">
+        {step === "locked" && (
+          <div className="animate-fade-in w-full">
+            <LockedScreen onContinue={() => setStep("login")} />
+          </div>
+        )}
+
+        {step === "login" && (
+          <div className="animate-fade-in w-full">
+            <GoogleLoginCard onLoginComplete={() => setStep("form")} />
+          </div>
+        )}
+
+        {step === "form" && (
+          <div className="animate-fade-in w-full py-4">
+            <AuditForm />
+          </div>
+        )}
       </div>
     </div>
   );
