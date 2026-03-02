@@ -7,7 +7,7 @@ const AuditForm = () => {
   const [protocolo, setProtocolo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbxRWIPEFW1fPRg9bJEtNDISKLaojKgJu6FePHoabTxvoypQQ5euGdNw4Y0u0q0zjppa/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleSubmit = async () => {
     // ALERTA DE CAMPOS VACÍOS
