@@ -1,88 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Google+Sans:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 150 4% 95%;
+    --foreground: 0 0% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 262 52% 47%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 217 89% 51%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 217 89% 51%;
 
     --radius: 0.5rem;
 
+    /* Google-specific tokens */
+    --google-blue: 217 89% 51%;
+    --google-blue-hover: 217 89% 45%;
+    --google-text: 0 0% 13%;
+    --google-text-secondary: 0 0% 45%;
+    --google-border: 0 0% 85%;
+    --google-input-border: 0 0% 47%;
+    --google-input-focus: 217 89% 51%;
+    --google-bg: 0 0% 98%;
+
+    /* Forms-specific tokens */
+    --forms-purple: 262 52% 47%;
+    --forms-purple-dark: 262 52% 40%;
+    --forms-bg: 150 4% 95%;
+    --forms-card: 0 0% 100%;
+    --forms-header-height: 10px;
+
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 262 52% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 217 89% 55%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 217 89% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +101,93 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
   }
+}
+
+/* Google Forms card style */
+.forms-card {
+  @apply bg-card rounded-lg;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 3px 1px rgba(0, 0, 0, 0.05);
+}
+
+.forms-card-header {
+  height: var(--forms-header-height);
+  background: hsl(var(--forms-purple));
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+/* Google-style input */
+.google-input {
+  @apply w-full px-4 py-3 text-base rounded border transition-colors duration-200 outline-none;
+  border-color: hsl(var(--google-input-border));
+  color: hsl(var(--google-text));
+}
+
+.google-input:focus {
+  border-color: hsl(var(--google-input-focus));
+  border-width: 2px;
+  padding: calc(1rem - 1px) calc(1rem - 1px) calc(0.75rem - 1px);
+}
+
+/* Google blue button */
+.google-btn-blue {
+  @apply px-6 py-2 rounded text-sm font-medium transition-all duration-200;
+  background: hsl(var(--google-blue));
+  color: hsl(0 0% 100%);
+  letter-spacing: 0.25px;
+}
+
+.google-btn-blue:hover {
+  background: hsl(var(--google-blue-hover));
+  box-shadow: 0 1px 3px rgba(66, 133, 244, 0.3);
+}
+
+/* Google text button */
+.google-btn-text {
+  @apply px-2 py-2 rounded text-sm font-medium transition-colors duration-200;
+  color: hsl(var(--google-blue));
+}
+
+.google-btn-text:hover {
+  background: hsl(217 89% 51% / 0.08);
+}
+
+/* Forms submit button */
+.forms-btn-submit {
+  @apply px-6 py-2.5 rounded text-sm font-medium transition-all duration-200;
+  background: hsl(var(--forms-purple));
+  color: hsl(0 0% 100%);
+}
+
+.forms-btn-submit:hover {
+  background: hsl(var(--forms-purple-dark));
+  box-shadow: 0 2px 4px rgba(103, 58, 183, 0.3);
+}
+
+/* Radio custom style */
+.forms-radio {
+  @apply w-5 h-5 rounded-full border-2 flex items-center justify-center cursor-pointer transition-colors;
+  border-color: hsl(var(--google-input-border));
+}
+
+.forms-radio.selected {
+  border-color: hsl(var(--forms-purple));
+}
+
+.forms-radio.selected::after {
+  content: '';
+  @apply w-2.5 h-2.5 rounded-full;
+  background: hsl(var(--forms-purple));
+}
+
+/* Checkbox custom */
+.forms-checkbox {
+  @apply w-[18px] h-[18px] rounded-sm border-2 flex items-center justify-center cursor-pointer transition-colors;
+  border-color: hsl(var(--google-input-border));
+}
+
+.forms-checkbox.checked {
+  background: hsl(var(--forms-purple));
+  border-color: hsl(var(--forms-purple));
 }
