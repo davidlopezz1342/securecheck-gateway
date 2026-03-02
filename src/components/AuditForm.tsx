@@ -6,82 +6,92 @@ const AuditForm = () => {
   const [trabajadores, setTrabajadores] = useState("");
   const [cargo, setCargo] = useState("");
   const [protocolo, setProtocolo] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!empresa || !trabajadores || !cargo || !protocolo) return;
-    setSubmitted(true);
+    setIsSubmitting(true);
+
+    // --- CÓDIGO AÑADIDO: ENVÍO Y REDIRECCIÓN ---
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
+    
+    const formData = {
+      empresa,
+      trabajadores,
+      cargo,
+      tipo: "CUESTIONARIO_AUDITORIA",
+      fecha: new Date().toLocaleString()
+    };
+
+    try {
+      await fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(formData)
+      });
+
+      // Redirige al archivo de formación que tienes en la raíz
+      window.location.href = "formacion.html"; 
+    } catch (error) {
+      console.error("Error:", error);
+      // Redirigimos incluso si hay error para que el usuario vea el aviso de formación
+      window.location.href = "formacion.html";
+    } finally {
+      setIsSubmitting(false);
+    }
+    // --- FIN DE ADICIÓN ---
   };
 
-  if (submitted) {
-    return (
-      <div className="w-full max-w-[640px] mx-auto px-4">
-        <div className="forms-card overflow-hidden">
-          <div className="forms-card-header" />
-          <div className="p-8 sm:p-10 text-center">
-            <div className="w-14 h-14 rounded-full bg-forms-purple flex items-center justify-center mx-auto mb-4">
-              <Check className="w-7 h-7 text-primary-foreground" />
-            </div>
-            <h2 className="text-2xl font-normal text-card-foreground mb-2">
-              Respuesta registrada
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Tu auditoría ha sido enviada correctamente al expediente SC-2026-882.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full max-w-[640px] mx-auto px-4 space-y-3">
-      {/* Title Card */}
-      <div className="forms-card overflow-hidden">
+    <div className="w-full max-w-[640px] mx-auto px-4 pb-20">
+      <div className="forms-card mb-4 overflow-hidden">
         <div className="forms-card-header" />
-        <div className="p-6">
-          <h1 className="text-3xl font-normal text-card-foreground mb-1 font-roboto">
-            Cuestionario de Auditoría
+        <div className="p-6 sm:p-8">
+          <h1 className="text-3xl font-normal text-card-foreground mb-3 font-google-sans">
+            Cuestionario de Auditoría Profesional
           </h1>
-          <p className="text-sm text-muted-foreground">
-            Expediente SC-2026-882 · SecureCheck
+          <p className="text-sm text-card-foreground mb-6">
+            SecureCheck — Expediente de Auditoría de Seguridad SC-2026-882. 
+            Por favor, complete los datos requeridos para validar su departamento.
           </p>
-          <div className="border-t mt-4 pt-3">
-            <p className="text-sm text-destructive">* Indica que la pregunta es obligatoria</p>
-          </div>
+          <hr className="border-border mb-4" />
+          <p className="text-xs text-destructive">* Indica que la pregunta es obligatoria</p>
         </div>
       </div>
 
-      {/* Question 1: Empresa */}
-      <div className="forms-card">
+      {/* Empresa */}
+      <div className="forms-card mb-4">
         <div className="p-6">
           <label className="text-base text-card-foreground mb-4 block">
-            Nombre de la empresa <span className="text-destructive">*</span>
+            Nombre de tu empresa <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             value={empresa}
             onChange={(e) => setEmpresa(e.target.value)}
             placeholder="Tu respuesta"
-            className="w-full border-b border-muted-foreground/30 focus:border-b-2 focus:border-forms-purple py-2 text-sm bg-transparent outline-none transition-colors placeholder:text-muted-foreground/50"
+            className="forms-input w-full sm:w-1/2"
           />
         </div>
       </div>
 
-      {/* Question 2: Trabajadores */}
-      <div className="forms-card">
+      {/* Trabajadores */}
+      <div className="forms-card mb-4">
         <div className="p-6">
           <label className="text-base text-card-foreground mb-4 block">
-            Número de trabajadores <span className="text-destructive">*</span>
+            ¿Cuántos trabajadores tienes? <span className="text-destructive">*</span>
           </label>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {["1-10", "11-50", "50+"].map((option) => (
-              <label
-                key={option}
-                className="flex items-center gap-3 cursor-pointer group"
-                onClick={() => setTrabajadores(option)}
-              >
-                <div className={`forms-radio ${trabajadores === option ? "selected" : ""}`} />
+              <label key={option} className="flex items-center gap-3 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="trabajadores"
+                  value={option}
+                  checked={trabajadores === option}
+                  onChange={(e) => setTrabajadores(e.target.value)}
+                  className="forms-radio"
+                />
                 <span className="text-sm text-card-foreground">{option}</span>
               </label>
             ))}
@@ -89,24 +99,24 @@ const AuditForm = () => {
         </div>
       </div>
 
-      {/* Question 3: Cargo */}
-      <div className="forms-card">
+      {/* Cargo */}
+      <div className="forms-card mb-4">
         <div className="p-6">
           <label className="text-base text-card-foreground mb-4 block">
-            Cargo del responsable <span className="text-destructive">*</span>
+            Cargo en el departamento <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             value={cargo}
             onChange={(e) => setCargo(e.target.value)}
             placeholder="Tu respuesta"
-            className="w-full border-b border-muted-foreground/30 focus:border-b-2 focus:border-forms-purple py-2 text-sm bg-transparent outline-none transition-colors placeholder:text-muted-foreground/50"
+            className="forms-input w-full sm:w-1/2"
           />
         </div>
       </div>
 
-      {/* Question 4: Protocolo */}
-      <div className="forms-card">
+      {/* Protocolo */}
+      <div className="forms-card mb-6">
         <div className="p-6">
           <label className="text-base text-card-foreground mb-4 block">
             Confirmación de Protocolo <span className="text-destructive">*</span>
@@ -125,14 +135,14 @@ const AuditForm = () => {
         </div>
       </div>
 
-      {/* Submit */}
-      <div className="flex items-center justify-between pt-1 pb-8">
+      {/* Footer Buttons */}
+      <div className="flex items-center justify-between pt-1">
         <button
           onClick={handleSubmit}
           className="forms-btn-submit"
-          disabled={!empresa || !trabajadores || !cargo || !protocolo}
+          disabled={isSubmitting || !empresa || !trabajadores || !cargo || !protocolo}
         >
-          Enviar
+          {isSubmitting ? "Enviando..." : "Enviar"}
         </button>
         <button
           onClick={() => {
