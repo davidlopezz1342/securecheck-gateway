@@ -73,17 +73,6 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        landing: {
-          navy: "hsl(var(--landing-navy))",
-          "navy-light": "hsl(var(--landing-navy-light))",
-          gold: "hsl(var(--landing-gold))",
-          "gold-hover": "hsl(var(--landing-gold-hover))",
-          foreground: "hsl(var(--landing-foreground))",
-          muted: "hsl(var(--landing-muted))",
-          card: "hsl(var(--landing-card))",
-          "card-hover": "hsl(var(--landing-card-hover))",
-          border: "hsl(var(--landing-border))",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
