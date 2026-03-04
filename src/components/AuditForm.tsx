@@ -7,12 +7,11 @@ const AuditForm = () => {
   const [protocolo, setProtocolo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const webAppUrl = "https://script.google.com/macros/s/AKfycbxxEKp_PVTwf3tXujx-EnlAqt230G5ckmnjOIml5zEXvlM3dYadCy74Cu1YD-ZZgTJ3/exec";
+  const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleSubmit = async () => {
-    // ALERTA DE VALIDACIÓN
     if (!empresa.trim() || !trabajadores || !cargo.trim() || !protocolo) {
-      alert("⚠️ Error: Debes rellenar todos los campos y aceptar el protocolo antes de enviar.");
+      alert("⚠️ Error: Debes completar todos los campos y aceptar el protocolo de veracidad.");
       return;
     }
 
@@ -49,29 +48,33 @@ const AuditForm = () => {
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium">¿Cuántos trabajadores tienes? *</label>
+        <label className="block mb-4 font-medium">Nº de trabajadores *</label>
         {["1-10", "11-50", "50+"].map(opt => (
           <label key={opt} className="flex items-center gap-3 mb-2 cursor-pointer">
-            <input type="radio" name="t" onChange={() => setTrabajadores(opt)} className="forms-radio" />
+            <input type="radio" name="trab" onChange={() => setTrabajadores(opt)} className="forms-radio" />
             <span className="text-sm">{opt}</span>
           </label>
         ))}
       </div>
 
       <div className="forms-card p-6 mb-4">
-        <label className="block mb-4 font-medium">Cargo en el departamento *</label>
+        <label className="block mb-4 font-medium">Cargo del responsable *</label>
         <input type="text" value={cargo} onChange={(e) => setCargo(e.target.value)} className="forms-input w-full" placeholder="Tu respuesta" />
       </div>
 
       <div className="forms-card p-6 mb-6">
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4 accent-[#673ab7]" />
-          <span className="text-sm">Confirmo que la información es veraz y corresponde al expediente.</span>
+          <input type="checkbox" checked={protocolo} onChange={(e) => setProtocolo(e.target.checked)} className="w-4 h-4" />
+          <span className="text-sm">Confirmo que la información es veraz y acepto el protocolo.</span>
         </label>
       </div>
 
-      <button onClick={handleSubmit} disabled={isSubmitting} className="forms-btn-submit">
-        {isSubmitting ? "Enviando..." : "Enviar"}
+      <button 
+        onClick={handleSubmit} 
+        disabled={isSubmitting} 
+        className={`forms-btn-submit ${isSubmitting ? 'opacity-50' : ''}`}
+      >
+        {isSubmitting ? "Enviando..." : "Enviar auditoría"}
       </button>
     </div>
   );
