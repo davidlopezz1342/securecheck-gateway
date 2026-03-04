@@ -6,7 +6,7 @@ const NAV_LINKS = [
   { label: "Inicio", href: "#inicio" },
   { label: "Nosotros", href: "#nosotros" },
   { label: "Ventajas", href: "#ventajas" },
-  { label: "Formación", href: "#formacion" },
+  { label: "Planes", href: "#formacion" },
   { label: "Proceso", href: "#proceso" },
   { label: "Testimonios", href: "#testimonios" },
   { label: "FAQ", href: "#faq" },
@@ -118,15 +118,15 @@ const Landing = () => {
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              Protegemos lo que{" "}
-              <span className="text-landing-gold font-serif italic">más importa</span>
+              Protege tu empresa{" "}
+              <span className="text-landing-gold font-serif italic">desde dentro</span>
             </h1>
             <p className="text-lg sm:text-xl text-landing-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-              Formación especializada en ciberseguridad, hacking ético y protección digital. Más de 15 años formando a los mejores profesionales del sector.
+              Formación especializada en ciberseguridad para tus equipos. Capacita a tus trabajadores en hacking ético, protección digital y respuesta ante amenazas reales.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="#formacion" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-landing-gold text-landing-navy font-semibold text-base hover:bg-landing-gold-hover transition-all shadow-lg shadow-landing-gold/20">
-                Ver Formación <ArrowRight className="h-5 w-5" />
+                Ver Planes <ArrowRight className="h-5 w-5" />
               </a>
               <a href="#nosotros" className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-landing-border text-landing-foreground font-semibold text-base hover:bg-landing-card transition-colors">
                 Conócenos
@@ -145,10 +145,10 @@ const Landing = () => {
       <section className="py-16 border-y border-landing-border bg-landing-navy-light/50">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { target: 98, suffix: "%", label: "Tasa de aprobados" },
-            { target: 5000, suffix: "+", label: "Alumnos formados" },
+            { target: 98, suffix: "%", label: "Satisfacción empresarial" },
+            { target: 5000, suffix: "+", label: "Empleados formados" },
             { target: 15, suffix: "+", label: "Años de experiencia" },
-            { target: 200, suffix: "+", label: "Empresas colaboradoras" },
+            { target: 200, suffix: "+", label: "Empresas confían en nosotros" },
           ].map(s => (
             <div key={s.label} className="text-center">
               <div className="text-4xl lg:text-5xl font-bold text-landing-gold mb-2">
@@ -165,17 +165,17 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Sobre Nosotros</span>
-            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Excelencia en Ciberseguridad</h2>
+            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Excelencia en Ciberseguridad Corporativa</h2>
             <p className="text-landing-muted mt-4 max-w-2xl mx-auto leading-relaxed">
-              Desde 2009, SecureCheck se ha posicionado como líder en la formación de profesionales de ciberseguridad en España. Nuestra trayectoria avala la calidad de nuestra enseñanza.
+              Desde 2009, SecureCheck forma a equipos de trabajo en ciberseguridad. Ayudamos a empresas a blindar su infraestructura capacitando a su activo más valioso: sus personas.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Shield, title: "Misión", desc: "Formar profesionales altamente cualificados en ciberseguridad, ofreciendo programas actualizados que cubren las amenazas más recientes del panorama digital." },
-              { icon: Eye, title: "Visión", desc: "Ser el centro de referencia nacional en formación de ciberseguridad, reconocidos por la excelencia de nuestros programas y la calidad de nuestros egresados." },
-              { icon: Users, title: "Equipo Experto", desc: "Nuestro equipo docente está formado por profesionales con amplia experiencia en pentesting, respuesta a incidentes y seguridad ofensiva con décadas de trayectoria." },
-              { icon: Award, title: "Certificaciones", desc: "Formaciones alineadas con certificaciones internacionales como CEH, OSCP, CompTIA Security+ y CISSP. Preparación integral para el mundo real." },
+              { icon: Shield, title: "Misión", desc: "Capacitar a los equipos de tu empresa en ciberseguridad, con programas actualizados que cubren las amenazas más recientes del panorama digital." },
+              { icon: Eye, title: "Visión", desc: "Ser el partner de referencia en formación corporativa de ciberseguridad, reconocidos por transformar la cultura de seguridad de las organizaciones." },
+              { icon: Users, title: "Equipo Experto", desc: "Formadores con amplia experiencia en pentesting, respuesta a incidentes y seguridad ofensiva. Profesionales en activo que conocen las amenazas reales." },
+              { icon: Award, title: "Certificaciones", desc: "Formaciones alineadas con CEH, OSCP, CompTIA Security+ y CISSP. Tus empleados obtendrán credenciales reconocidas internacionalmente." },
             ].map(item => (
               <motion.div key={item.title} whileHover={{ y: -5 }} className="bg-landing-card border border-landing-border rounded-2xl p-8 hover:border-landing-gold/30 transition-all">
                 <item.icon className="h-10 w-10 text-landing-gold mb-4" />
@@ -193,16 +193,16 @@ const Landing = () => {
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Por qué elegirnos</span>
             <h2 className="text-4xl lg:text-5xl font-bold mt-4">La diferencia SecureCheck</h2>
-            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">No somos un centro de formación más. Somos tu mejor inversión para una carrera sólida en ciberseguridad.</p>
+            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">La mejor inversión para proteger tu empresa es formar a tu equipo. Te explicamos por qué somos la opción ideal.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: ShieldCheck, title: "Formación Práctica", desc: "Laboratorios reales con entornos simulados de ataque y defensa. Aprenderás haciendo, no solo leyendo." },
-              { icon: Users, title: "Docentes Profesionales", desc: "Expertos en activo: pentesters, analistas SOC, y responsables de seguridad con décadas de experiencia real." },
-              { icon: TrendingUp, title: "Bolsa de Empleo", desc: "Red de más de 200 empresas tecnológicas que contratan directamente a nuestros egresados con prioridad." },
-              { icon: Clock, title: "Horarios Flexibles", desc: "Turnos de mañana y tarde para que puedas compaginar tu formación con tu vida personal y profesional." },
-              { icon: CreditCard, title: "Financiación a Medida", desc: "Pagos fraccionados sin intereses. Descuentos para desempleados y colectivos especiales disponibles." },
-              { icon: Award, title: "Resultados Probados", desc: "98% de aprobados en primera convocatoria. Los resultados hablan por nosotros curso tras curso." },
+              { icon: ShieldCheck, title: "Formación Práctica", desc: "Laboratorios con entornos simulados de ataque y defensa. Tus empleados aprenderán con escenarios realistas adaptados a tu sector." },
+              { icon: Users, title: "Docentes Profesionales", desc: "Pentesters, analistas SOC y CISOs en activo con décadas de experiencia real impartiendo formación corporativa." },
+              { icon: TrendingUp, title: "ROI Garantizado", desc: "Reduce el riesgo de brechas de seguridad hasta un 70%. La formación de tu equipo es la mejor inversión en ciberdefensa." },
+              { icon: Clock, title: "Horarios Flexibles", desc: "Formación adaptada a la jornada laboral de tu empresa. Turnos de mañana y tarde para minimizar el impacto en la productividad." },
+              { icon: CreditCard, title: "Financiación a Medida", desc: "Pagos fraccionados sin intereses. Descuentos por volumen para empresas con múltiples empleados a formar." },
+              { icon: Award, title: "Resultados Probados", desc: "98% de satisfacción empresarial. Más de 200 empresas ya han confiado en nosotros para formar a sus equipos." },
             ].map(item => (
               <motion.div key={item.title} whileHover={{ y: -5 }} className="bg-landing-card border border-landing-border rounded-2xl p-8 hover:border-landing-gold/30 transition-all">
                 <item.icon className="h-10 w-10 text-landing-gold mb-4" />
@@ -214,13 +214,13 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* PRICING / FORMACIÓN */}
+      {/* PRICING / PLANES */}
       <section id="formacion" className="py-24">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Formación</span>
+            <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Planes</span>
             <h2 className="text-4xl lg:text-5xl font-bold mt-4">Nuestros Programas</h2>
-            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">Programas formativos diseñados para prepararte y certificarte con la mayor garantía de éxito en ciberseguridad.</p>
+            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">Planes formativos diseñados para capacitar a los equipos de tu empresa con la mayor garantía de éxito.</p>
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -234,7 +234,7 @@ const Landing = () => {
               </div>
               <p className="text-sm text-landing-muted mb-1">/ 60 horas</p>
               <p className="text-sm text-landing-muted mt-4 mb-8 leading-relaxed">
-                Introducción a la ciberseguridad para quienes quieren dar sus primeros pasos. Ideal para perfiles IT que buscan especializarse.
+                Introduce a tus empleados en la ciberseguridad. Ideal para equipos técnicos que necesitan una base sólida en protección digital.
               </p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
@@ -243,7 +243,7 @@ const Landing = () => {
                   "Seguridad en entornos web",
                   "Herramientas básicas (Nmap, Wireshark)",
                   "Material didáctico incluido",
-                  "Acceso a laboratorio virtual",
+                  "Informe de progreso por empleado",
                 ].map(f => (
                   <li key={f} className="flex items-start gap-3 text-sm">
                     <Check className="h-5 w-5 text-landing-gold shrink-0 mt-0.5" />
@@ -266,16 +266,16 @@ const Landing = () => {
               </div>
               <p className="text-sm text-landing-muted mb-1">/ 180 horas</p>
               <p className="text-sm text-landing-muted mt-4 mb-8 leading-relaxed">
-                Formación completa para convertirte en analista de ciberseguridad. Cubre análisis de vulnerabilidades, respuesta a incidentes y auditoría de seguridad.
+                Formación completa para que tu equipo domine el análisis de vulnerabilidades, la respuesta a incidentes y la auditoría de seguridad de tu organización.
               </p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  "Acceso a bolsa de empleo",
                   "Preparación certificación CompTIA Security+",
                   "Material didáctico incluido",
                   "Laboratorios prácticos de pentesting",
                   "Análisis de vulnerabilidades",
                   "Respuesta a incidentes de seguridad",
+                  "Panel de seguimiento para la empresa",
                 ].map(f => (
                   <li key={f} className="flex items-start gap-3 text-sm">
                     <Check className="h-5 w-5 text-landing-gold shrink-0 mt-0.5" />
@@ -299,19 +299,19 @@ const Landing = () => {
               </div>
               <p className="text-sm text-landing-muted mb-1">/ 280 horas</p>
               <p className="text-sm text-landing-muted mt-4 mb-8 leading-relaxed">
-                La formación más completa del mercado. Todo lo necesario para destacar desde el primer día. Incluye doble certificación, mentorización 1 a 1 y prácticas garantizadas en empresa.
+                La formación más completa del mercado para tu empresa. Incluye doble certificación, mentorización personalizada y simulacros de ataque adaptados a tu infraestructura.
               </p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   "Todo lo incluido en el plan estándar",
                   "Soporte post-formación 12 meses",
-                  "Acceso prioritario a ofertas de empleo",
                   "Certificación doble: CEH + OSCP",
-                  "Prácticas garantizadas en empresa",
                   "Mentorización personalizada 1 a 1",
                   "Red Team y técnicas avanzadas",
                   "Análisis forense digital",
-                  "Especialización en seguridad ofensiva",
+                  "Simulacros de ataque a tu empresa",
+                  "Informe ejecutivo de resultados",
+                  "Consultoría de seguridad incluida",
                 ].map(f => (
                   <li key={f} className="flex items-start gap-3 text-sm">
                     <Check className="h-5 w-5 text-landing-gold shrink-0 mt-0.5" />
@@ -322,7 +322,7 @@ const Landing = () => {
               <a href="#contacto" className="block text-center px-6 py-3 rounded-xl bg-landing-gold text-landing-navy font-semibold hover:bg-landing-gold-hover transition-all shadow-lg shadow-landing-gold/20">
                 Solicitar Información
               </a>
-              <p className="text-center text-xs text-landing-muted mt-4">Elegido por el 85% de nuestros alumnos</p>
+              <p className="text-center text-xs text-landing-muted mt-4">Elegido por el 85% de nuestras empresas cliente</p>
             </motion.div>
           </div>
         </div>
@@ -333,15 +333,15 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Proceso</span>
-            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Tu camino hacia la profesión</h2>
-            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">En solo 4 pasos estarás listo para comenzar tu carrera en ciberseguridad con la mejor preparación del mercado.</p>
+            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Así capacitamos a tu equipo</h2>
+            <p className="text-landing-muted mt-4 max-w-2xl mx-auto">En solo 4 pasos tus empleados estarán preparados para proteger tu empresa frente a ciberamenazas.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { step: "01", title: "Solicita Información", desc: "Contacta con nosotros y recibe asesoramiento gratuito y personalizado sobre el programa que mejor se adapta a tus necesidades y objetivos." },
-              { step: "02", title: "Matricúlate", desc: "Completa tu inscripción de forma sencilla. Ofrecemos facilidades de pago y financiación a tu medida sin intereses." },
-              { step: "03", title: "Fórmate", desc: "Accede a clases presenciales con profesionales en activo, laboratorios de hacking y material didáctico de primer nivel actualizado." },
-              { step: "04", title: "Certifícate", desc: "Supera las pruebas de certificación con nuestra preparación intensiva y obtén tus credenciales profesionales reconocidas internacionalmente." },
+              { step: "01", title: "Solicita Información", desc: "Contacta con nosotros y recibe asesoramiento gratuito. Analizamos las necesidades de ciberseguridad de tu empresa y te recomendamos el plan ideal." },
+              { step: "02", title: "Plan Personalizado", desc: "Diseñamos un programa adaptado al tamaño de tu empresa, sector y nivel técnico de tus empleados. Horarios a tu medida." },
+              { step: "03", title: "Formación del Equipo", desc: "Tus empleados acceden a formación con profesionales en activo, laboratorios de hacking y material didáctico actualizado." },
+              { step: "04", title: "Certificación y Resultados", desc: "Tu equipo obtiene certificaciones reconocidas y tu empresa recibe un informe completo de capacidades adquiridas y recomendaciones." },
             ].map(item => (
               <motion.div key={item.step} whileHover={{ y: -5 }} className="relative bg-landing-card border border-landing-border rounded-2xl p-8 hover:border-landing-gold/30 transition-all">
                 <span className="text-5xl font-bold text-landing-gold/20">{item.step}</span>
@@ -358,15 +358,15 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Testimonios</span>
-            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Lo que dicen nuestros alumnos</h2>
-            <p className="text-landing-muted mt-4">Miles de profesionales ya han confiado en nosotros. Estas son sus experiencias reales.</p>
+            <h2 className="text-4xl lg:text-5xl font-bold mt-4">Lo que dicen nuestros clientes</h2>
+            <p className="text-landing-muted mt-4">Más de 200 empresas ya han confiado en nosotros para formar a sus equipos.</p>
           </div>
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {[
-              { text: "Gracias a SecureCheck aprobé el CEH a la primera. La formación práctica y los laboratorios marcan la diferencia frente a otros centros. No podría estar más satisfecho.", name: "Carlos Martínez", role: "Pentester Junior" },
-              { text: "El programa Premium superó todas mis expectativas. Las prácticas en empresa me permitieron conseguir trabajo antes de terminar el curso. La doble certificación fue clave.", name: "María López", role: "Analista SOC" },
-              { text: "El equipo docente es excepcional. Profesionales con experiencia real en Red Team que te preparan para situaciones del día a día. Su dedicación es única.", name: "Javier Ruiz", role: "Consultor de Ciberseguridad" },
-              { text: "La doble certificación del plan Premium me abrió puertas que no imaginaba. Ahora trabajo en respuesta a incidentes gracias a la formación recibida.", name: "Ana Fernández", role: "Incident Responder" },
+              { text: "SecureCheck formó a todo nuestro departamento IT en ciberseguridad. Desde entonces, hemos reducido los incidentes de seguridad un 80%. Una inversión que se paga sola.", name: "Carlos Martínez", role: "CTO — TechSolutions S.L." },
+              { text: "Buscábamos una formación práctica y adaptada a nuestro sector industrial. SecureCheck diseñó un programa a medida que superó todas nuestras expectativas.", name: "María López", role: "Directora de IT — Logística Ibérica" },
+              { text: "El equipo docente es excepcional. Nuestros empleados no solo obtuvieron certificaciones, sino que ahora detectan y responden a amenazas de forma proactiva.", name: "Javier Ruiz", role: "CEO — DataGuard Consulting" },
+              { text: "La doble certificación del plan Premium nos ha posicionado como empresa referente en seguridad dentro de nuestro sector. Totalmente recomendable.", name: "Ana Fernández", role: "CISO — Grupo Financiero Norte" },
             ].map((t, i) => (
               <motion.div key={i} whileHover={{ y: -5 }} className="bg-landing-card border border-landing-border rounded-2xl p-8 hover:border-landing-gold/30 transition-all">
                 <div className="flex gap-1 mb-4">
@@ -392,20 +392,20 @@ const Landing = () => {
       <section className="py-24 bg-gradient-to-r from-landing-gold/10 via-landing-navy to-landing-gold/10 border-y border-landing-border">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-landing-gold text-sm font-semibold tracking-widest uppercase mb-4">Plazas limitadas — Próxima convocatoria abierta</p>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Tu futuro en ciberseguridad<br />empieza aquí</h2>
-          <p className="text-landing-muted mb-10 max-w-xl mx-auto">No dejes pasar esta oportunidad. Únete a los más de 5.000 profesionales que ya han transformado su carrera con nosotros.</p>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-6">Protege tu empresa<br />formando a tu equipo</h2>
+          <p className="text-landing-muted mb-10 max-w-xl mx-auto">No dejes pasar esta oportunidad. Únete a las más de 200 empresas que ya han reforzado su ciberseguridad con nosotros.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#contacto" className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-landing-gold text-landing-navy font-semibold hover:bg-landing-gold-hover transition-all shadow-lg shadow-landing-gold/20">
-              Reservar mi plaza <ArrowRight className="h-5 w-5" />
+              Solicitar presupuesto <ArrowRight className="h-5 w-5" />
             </a>
             <a href="#formacion" className="inline-flex items-center justify-center px-8 py-4 rounded-xl border border-landing-border text-landing-foreground font-semibold hover:bg-landing-card transition-colors">
-              Ver programas
+              Ver planes
             </a>
           </div>
           <div className="flex flex-wrap justify-center gap-8 mt-12 text-sm text-landing-muted">
             <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-landing-gold" /> Certificaciones internacionales</span>
             <span className="flex items-center gap-2"><CreditCard className="h-4 w-4 text-landing-gold" /> Financiación sin intereses</span>
-            <span className="flex items-center gap-2"><Award className="h-4 w-4 text-landing-gold" /> 98% tasa de aprobados</span>
+            <span className="flex items-center gap-2"><Award className="h-4 w-4 text-landing-gold" /> 98% satisfacción empresarial</span>
           </div>
         </div>
       </section>
@@ -416,15 +416,15 @@ const Landing = () => {
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">FAQ</span>
             <h2 className="text-4xl lg:text-5xl font-bold mt-4">Preguntas frecuentes</h2>
-            <p className="text-landing-muted mt-4">Resolvemos tus dudas más habituales sobre nuestra formación.</p>
+            <p className="text-landing-muted mt-4">Resolvemos tus dudas más habituales sobre nuestra formación corporativa.</p>
           </div>
           <div className="space-y-4">
-            <FAQItem question="¿Qué requisitos necesito para matricularme?" answer="No necesitas experiencia previa en ciberseguridad, aunque son recomendables conocimientos básicos de informática y redes. Para el plan Premium, se recomienda experiencia previa en IT." />
-            <FAQItem question="¿Cuánto dura la formación completa?" answer="Depende del plan elegido: el Plan Básico son 60 horas, el Estándar 180 horas y el Premium 280 horas. Se imparten en horarios flexibles de mañana y tarde." />
-            <FAQItem question="¿Ofrecéis facilidades de pago?" answer="Sí, ofrecemos financiación a medida sin intereses con pagos fraccionados. Además, disponemos de descuentos especiales para desempleados y colectivos específicos." />
-            <FAQItem question="¿Qué tasa de aprobados tenéis?" answer="Nuestra tasa de aprobados en primera convocatoria es del 98%, una de las más altas del sector. Nuestros métodos de enseñanza práctica garantizan resultados." />
-            <FAQItem question="¿Garantizáis empleo al terminar?" answer="Contamos con una bolsa de empleo con más de 200 empresas tecnológicas colaboradoras. El plan Premium incluye prácticas garantizadas en empresa." />
-            <FAQItem question="¿Las clases son presenciales u online?" answer="Ofrecemos modalidad presencial y semipresencial. Los laboratorios prácticos se realizan en nuestras instalaciones con entornos de simulación avanzados." />
+            <FAQItem question="¿La formación se adapta a mi empresa?" answer="Sí, diseñamos programas personalizados según el tamaño de tu empresa, sector y nivel técnico de tus empleados. Podemos impartir la formación en vuestras instalaciones o en las nuestras." />
+            <FAQItem question="¿Cuánto dura la formación?" answer="Depende del plan elegido: el Plan Básico son 60 horas, el Estándar 180 horas y el Premium 280 horas. Los horarios se adaptan a la jornada laboral de tu empresa." />
+            <FAQItem question="¿Ofrecéis descuentos por volumen?" answer="Sí, ofrecemos descuentos para empresas que formen a múltiples empleados, así como financiación a medida sin intereses con pagos fraccionados." />
+            <FAQItem question="¿Qué resultados puedo esperar?" answer="Nuestras empresas cliente reportan una reducción media del 70% en incidentes de seguridad. Además, recibirás informes detallados del progreso de cada empleado." />
+            <FAQItem question="¿Mis empleados obtendrán certificaciones oficiales?" answer="Sí, dependiendo del plan, tus empleados podrán obtener certificaciones como CompTIA Security+, CEH u OSCP, reconocidas internacionalmente." />
+            <FAQItem question="¿Las clases son presenciales u online?" answer="Ofrecemos modalidad presencial, semipresencial y también in-company (en vuestras oficinas). Los laboratorios prácticos se realizan con entornos de simulación avanzados." />
           </div>
         </div>
       </section>
@@ -435,7 +435,7 @@ const Landing = () => {
           <div className="text-center mb-16">
             <span className="text-landing-gold text-sm font-semibold tracking-widest uppercase">Contacto</span>
             <h2 className="text-4xl lg:text-5xl font-bold mt-4">¿Tienes preguntas?</h2>
-            <p className="text-landing-muted mt-4">Estamos aquí para ayudarte. Contáctanos y te responderemos lo antes posible.</p>
+            <p className="text-landing-muted mt-4">Estamos aquí para ayudarte. Contáctanos y te enviaremos un presupuesto personalizado.</p>
           </div>
           <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
             <div className="space-y-6">
@@ -454,18 +454,19 @@ const Landing = () => {
               ))}
             </div>
             <form className="space-y-4" onSubmit={e => e.preventDefault()}>
-              <input type="text" placeholder="Nombre *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
+              <input type="text" placeholder="Nombre de la empresa *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
+              <input type="text" placeholder="Persona de contacto *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
               <input type="tel" placeholder="Teléfono *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
-              <input type="email" placeholder="Email *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
+              <input type="email" placeholder="Email corporativo *" className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors" />
               <select className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-muted focus:border-landing-gold focus:outline-none transition-colors">
-                <option>Seleccionar curso...</option>
-                <option>Fundamentos Cyber (Básico)</option>
-                <option>Analista de Ciberseguridad (Estándar)</option>
-                <option>Pentester & Red Team (Premium)</option>
+                <option>Seleccionar plan...</option>
+                <option>Fundamentos Cyber (Básico — 1.000€)</option>
+                <option>Analista de Ciberseguridad (Estándar — 4.500€)</option>
+                <option>Pentester & Red Team (Premium — 10.000€)</option>
               </select>
-              <textarea placeholder="Mensaje" rows={4} className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors resize-none" />
+              <textarea placeholder="Nº de empleados a formar y comentarios" rows={4} className="w-full px-4 py-3 rounded-xl bg-landing-card border border-landing-border text-landing-foreground placeholder:text-landing-muted/50 focus:border-landing-gold focus:outline-none transition-colors resize-none" />
               <button type="submit" className="w-full py-4 rounded-xl bg-landing-gold text-landing-navy font-semibold hover:bg-landing-gold-hover transition-all shadow-lg shadow-landing-gold/20">
-                Enviar mensaje
+                Solicitar presupuesto
               </button>
             </form>
           </div>
